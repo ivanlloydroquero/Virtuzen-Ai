@@ -43,7 +43,9 @@
                         <button onclick="toggleTheme()" title="Toggle HoloTheme"><i class="fas fa-adjust"></i>Theme</button>
                         <button onclick="showSettings()" title="Settings"><i class="fas fa-cog"></i> Settings</button>
                         <button onclick="showHelp()" title="HoloHelp"><i class="fas fa-question"></i> Help</button>
-                        <button onclick="exportChat()" title="Export HoloChat"><i class="fas fa-download"></i> Export VirtuzenChat</button>
+                        <button onclick="exportChat()" title="Export VirtuzenChat"><i class="fas fa-download"></i> Export VirtuzenChat</button>
+                        <button onclick="showLoginModal()" title="Login"><i class="fas fa-sign-in-alt"></i> Login</button>
+                       <button onclick="showSignUpModal()" title="Sign Up"><i class="fas fa-user-plus"></i> Sign Up</button> 
                         <button onclick="signOut()" title="Sign Out"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
                     </div>
                 </div>
@@ -140,7 +142,7 @@
     </div>
     <div class="modal" id="settingsModal">
         <div class="modal-content">
-            <h2>HoloSettings 3000</h2>
+            <h2>Virtuzen Settings</h2>
             <label>Response Speed (Femtoseconds):
                 <input type="range" id="responseSpeed" min="5" max="150" value="80" oninput="updateResponseSpeed()">
             </label>
@@ -162,6 +164,39 @@
             <button onclick="closeModal()" title="Close">Close</button>
         </div>
     </div>
+    <div class="modal" id="loginModal">
+    <div class="modal-content login-modal-content">
+        <h2><i class="fas fa-sign-in-alt"></i>Login to your account</h2>
+        <form id="loginForm" onsubmit="handleLogin(event)">
+            <label for="loginEmail">Email:
+                <input type="email" id="loginEmail" placeholder="your-email@gmail.com" required>
+            </label>
+            <label for="loginPassword">Password:
+                <input type="password" id="loginPassword" placeholder="Access your matrix" required>
+            </label>
+            <button type="submit" class="login-submit-btn" title="Enter the Virtuzen World!"><i class="fas fa-arrow-right"></i> Login</button>
+            <button type="button" onclick="closeLoginModal()" title="Close"><i class="fas fa-times"></i> Close</button>
+        </form>
+    </div>
+</div>
+<div class="modal" id="signUpModal">
+    <div class="modal-content signup-modal-content">
+        <h2><i class="fas fa-user-plus"></i>Create your account</h2>
+        <form id="signUpForm" onsubmit="handleSignUp(event)">
+            <label for="signupUsername">Username:
+                <input type="text" id="signupUsername" placeholder="Enter your username" required>
+            </label>
+            <label for="signupEmail">Email:
+                <input type="email" id="signupEmail" placeholder="your-email@gmail.com" required>
+            </label>
+            <label for="signupPassword"> Password:
+                <input type="password" id="signupPassword" placeholder="Secure your matrix" required>
+            </label>
+            <button type="submit" class="signup-submit-btn" title="Join the Virtuzen World!"><i class="fas fa-arrow-right"></i> Sign Up</button>
+            <button type="button" onclick="closeSignUpModal()" title="Close"><i class="fas fa-times"></i> Close</button>
+        </form>
+    </div>
+</div>
     <script src="chatbot.js"></script>
 </body>
-</html>
+                    </html>
