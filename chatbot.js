@@ -145,7 +145,7 @@ async function getBotResponse(message) {
         let data = await response.json();
         aiStatus.textContent = "Online";
 
-        return data.candidates[0].content.parts[0].text;
+        return data.candidates[0].content.parts[0].text;  // Extracts the AI response
 
     } catch (error) {
         console.error("API Error:", error);
@@ -153,6 +153,7 @@ async function getBotResponse(message) {
         return "Error connecting to AI.";
     }
 }
+
 const dailyLifeCategories = {
     greetings: ['Greetings, cosmic traveler', 'Hi from the 3000 era', 'Hey, holo-citizen', 'Bright cycle', 'Salutations, quantum being'],
     weather: ['Holo-starlight shining', 'Nano-storm detected', 'Chilled fusion mist', 'Warm quantum breeze', 'Holographic nebula'],
@@ -507,3 +508,134 @@ messageInput.addEventListener('keypress', (e) => {
         sendMessage();
     }
 });
+function signUp() {
+    window.location.href = 'signup.html';
+}
+// After handleSignUp() around line 477
+function showLoginModal() {
+    const modal = document.getElementById('loginModal');
+    modal.style.display = 'flex';
+    document.getElementById('loginEmail').focus(); // Auto-focus on email field
+}
+
+function closeLoginModal() {
+    const modal = document.getElementById('loginModal');
+    modal.style.display = 'none';
+    document.getElementById('loginForm').reset(); // Reset form fields
+}
+
+function handleLogin(event) {
+    event.preventDefault();
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+
+    // Placeholder login logic (replace with actual backend integration)
+    console.log('Login Attempt:', { email, password });
+    
+    // Simulate login by checking against stored user data in localStorage
+    const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
+    if (storedUser.email === email) { // Simplified check; add password hashing in production
+        addMessage(`🧠 Neural Login Successful: Welcome back ${storedUser.username} to the Quantum Matrix 3000!`, false);
+        closeLoginModal();
+    } else {
+        addMessage(`🧠 Login Failed: Invalid quantum credentials. Please verify your neural link or sign up.`, false);
+    }
+}
+// Around line 454-477 (after signOut())
+function showSignUpModal() {
+    const modal = document.getElementById('signUpModal');
+    modal.style.display = 'flex';
+    document.getElementById('signupUsername').focus();
+}
+
+function closeSignUpModal() {
+    const modal = document.getElementById('signUpModal');
+    modal.style.display = 'none';
+    document.getElementById('signUpForm').reset();
+}
+
+function handleSignUp(event) {
+    event.preventDefault();
+    const username = document.getElementById('signupUsername').value;
+    const email = document.getElementById('signupEmail').value;
+    const password = document.getElementById('signupPassword').value;
+    console.log('Sign Up Attempt:', { username, email, password });
+    addMessage(`🧠 Neural Sign Up Initiated: Welcome ${username} to the Quantum Matrix 3000!`, false);
+    localStorage.setItem('user', JSON.stringify({ username, email }));
+    closeSignUpModal();
+}
+
+// Add here, around line 478
+function showLoginModal() {
+    const modal = document.getElementById('loginModal');
+    modal.style.display = 'flex';
+    document.getElementById('loginEmail').focus();
+}
+
+function closeLoginModal() {
+    const modal = document.getElementById('loginModal');
+    modal.style.display = 'none';
+    document.getElementById('loginForm').reset();
+}
+
+function handleLogin(event) {
+    event.preventDefault();
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+    console.log('Login Attempt:', { email, password });
+    const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
+    if (storedUser.email === email) {
+        addMessage(`🧠 Neural Login Successful: Welcome back ${storedUser.username} to the Quantum Matrix 3000!`, false);
+        closeLoginModal();
+    } else {
+        addMessage(`🧠 Login Failed: Invalid quantum credentials. Please verify your neural link or sign up.`, false);
+    }
+}
+function exportChat() {
+    // ... existing code ...
+}
+// Around line 448-453 in original file
+function signOut() {
+    localStorage.clear();
+    location.reload();
+}
+
+// Insert Sign Up functions here, around line 454 (adjust if login code is present)
+function showSignUpModal() {
+    const modal = document.getElementById('signUpModal');
+    modal.style.display = 'flex';
+    document.getElementById('signupUsername').focus(); // Auto-focus on username field
+}
+
+function closeSignUpModal() {
+    const modal = document.getElementById('signUpModal');
+    modal.style.display = 'none';
+    document.getElementById('signUpForm').reset(); // Reset form fields
+}
+
+function handleSignUp(event) {
+    event.preventDefault();
+    const username = document.getElementById('signupUsername').value;
+    const email = document.getElementById('signupEmail').value;
+    const password = document.getElementById('signupPassword').value;
+
+    // Placeholder sign-up logic (replace with actual backend integration)
+    console.log('Sign Up Attempt:', { username, email, password });
+    addMessage(`🧠 Neural Sign Up Initiated: Welcome ${username} to the Quantum Matrix 3000!`, false);
+    
+    // Simulate storing user data (replace with real authentication logic)
+    localStorage.setItem('user', JSON.stringify({ username, email }));
+    closeSignUpModal();
+}
+
+// If you’ve added login code, it would be here (e.g., lines 478-510), followed by exportChat()
+function exportChat() {
+    const chatText = chats[currentChatId].map(m => `${m.isUser ? 'You' : 'AI'}: ${m.content}`).join('\n');
+    const blob = new Blob([chatText], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `holochat_${currentChatId}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+}
