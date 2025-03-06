@@ -990,3 +990,268 @@ body {
         margin: 15px 0;
     }
 }
+/* Login Modal Styles */
+.login-modal-content {
+    background: linear-gradient(135deg, #1a1a1a, #2a2a2a); /* Slightly different gradient */
+    padding: 40px;
+    border-radius: 30px;
+    width: 90%;
+    max-width: 550px;
+    color: #e0e0e0;
+    box-shadow: 0 0 80px rgba(26, 115, 232, 0.8), 0 0 30px rgba(107, 255, 107, 0.5); /* Blue-green glow */
+    animation: quantumSlide 0.5s ease, pulseGlowLogin 3s infinite; /* Custom pulsing glow */
+    border: 3px solid #1a73e8;
+}
+
+/* Modal Header */
+.login-modal-content h2 {
+    font-size: 1.8em;
+    margin-bottom: 30px;
+    color: #1a73e8;
+    text-shadow: 0 0 15px rgba(26, 115, 232, 0.8);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Form Labels and Inputs */
+.login-modal-content label {
+    display: block;
+    margin: 20px 0;
+    font-size: 1.2em;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+}
+
+.login-modal-content input[type="email"],
+.login-modal-content input[type="password"] {
+    width: 100%;
+    padding: 15px;
+    margin-top: 8px;
+    border: 2px solid #404040;
+    border-radius: 12px;
+    background: #252525;
+    color: #e0e0e0;
+    font-size: 1.1em;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+}
+
+.login-modal-content input:focus {
+    border-color: #1a73e8;
+    background: #303030;
+    box-shadow: 0 0 30px rgba(26, 115, 232, 0.9);
+    transform: scale(1.02);
+    outline: none;
+}
+
+/* Login Submit Button */
+.login-submit-btn {
+    padding: 15px 25px;
+    background: linear-gradient(90deg, #1a73e8, #6bff6b); /* Blue to green gradient */
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 1.2em;
+    margin: 20px 10px 0 0;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 0 25px rgba(26, 115, 232, 0.7);
+}
+
+.login-submit-btn:hover {
+    background: linear-gradient(90deg, #1557b0, #5ae55a);
+    transform: scale(1.1);
+    box-shadow: 0 0 40px rgba(26, 115, 232, 1);
+}
+
+/* Close Button */
+.login-modal-content button[type="button"] {
+    padding: 15px 25px;
+    background: #404040;
+    color: #e0e0e0;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 1.2em;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+.login-modal-content button[type="button"]:hover {
+    background: #505050;
+    color: #ff6b6b;
+    transform: scale(1.1);
+    box-shadow: 0 0 30px rgba(255, 107, 107, 0.8);
+}
+
+/* Custom Pulsing Glow Animation for Login */
+@keyframes pulseGlowLogin {
+    0% { box-shadow: 0 0 80px rgba(26, 115, 232, 0.8), 0 0 30px rgba(107, 255, 107, 0.5); }
+    50% { box-shadow: 0 0 100px rgba(26, 115, 232, 1.1), 0 0 50px rgba(107, 255, 107, 0.7); }
+    100% { box-shadow: 0 0 80px rgba(26, 115, 232, 0.8), 0 0 30px rgba(107, 255, 107, 0.5); }
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+    .login-modal-content {
+        padding: 25px;
+        max-width: 90%;
+        border-radius: 20px;
+        box-shadow: 0 0 60px rgba(26, 115, 232, 0.7);
+    }
+    .login-modal-content h2 {
+        font-size: 1.5em;
+        margin-bottom: 20px;
+    }
+    .login-modal-content label {
+        font-size: 1em;
+        margin: 15px 0;
+    }
+    .login-modal-content input {
+        padding: 12px;
+        font-size: 1em;
+    }
+    .login-submit-btn, .login-modal-content button[type="button"] {
+        padding: 12px 20px;
+        font-size: 1em;
+    }
+}
+/* Sign Up Modal Styles */
+.signup-modal-content {
+    background: linear-gradient(135deg, #1a1a1a, #333); /* Darker gradient */
+    padding: 40px;
+    border-radius: 30px;
+    width: 90%;
+    max-width: 550px;
+    color: #e0e0e0;
+    box-shadow: 0 0 80px rgba(26, 115, 232, 0.9), 0 0 30px rgba(255, 107, 107, 0.5); /* Multi-color glow */
+    animation: quantumSlide 0.5s ease, pulseGlow 3s infinite; /* Pulsing glow */
+    border: 3px solid #1a73e8; /* Bright blue border */
+}
+
+/* Modal Header */
+.signup-modal-content h2 {
+    font-size: 1.8em;
+    margin-bottom: 30px;
+    color: #1a73e8;
+    text-shadow: 0 0 15px rgba(26, 115, 232, 0.8);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Form Labels and Inputs */
+.signup-modal-content label {
+    display: block;
+    margin: 20px 0;
+    font-size: 1.2em;
+    text-shadow: 0 0 8px rgba(255, 255, 255, 0.3);
+}
+
+.signup-modal-content input[type="text"],
+.signup-modal-content input[type="email"],
+.signup-modal-content input[type="password"] {
+    width: 100%;
+    padding: 15px;
+    margin-top: 8px;
+    border: 2px solid #404040;
+    border-radius: 12px;
+    background: #252525;
+    color: #e0e0e0;
+    font-size: 1.1em;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+}
+
+.signup-modal-content input:focus {
+    border-color: #1a73e8;
+    background: #303030;
+    box-shadow: 0 0 30px rgba(26, 115, 232, 0.9);
+    transform: scale(1.02);
+    outline: none;
+}
+
+/* Sign Up Submit Button */
+.signup-submit-btn {
+    padding: 15px 25px;
+    background: linear-gradient(90deg, #1a73e8, #ff6b6b); /* Gradient from blue to red */
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 1.2em;
+    margin: 20px 10px 0 0;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 0 25px rgba(26, 115, 232, 0.7);
+}
+
+.signup-submit-btn:hover {
+    background: linear-gradient(90deg, #1557b0, #e55a5a);
+    transform: scale(1.1);
+    box-shadow: 0 0 40px rgba(26, 115, 232, 1);
+}
+
+/* Close Button */
+.signup-modal-content button[type="button"] {
+    padding: 15px 25px;
+    background: #404040;
+    color: #e0e0e0;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 1.2em;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+.signup-modal-content button[type="button"]:hover {
+    background: #505050;
+    color: #ff6b6b;
+    transform: scale(1.1);
+    box-shadow: 0 0 30px rgba(255, 107, 107, 0.8);
+}
+
+/* Pulsing Glow Animation (ensure it’s present if not already added) */
+@keyframes pulseGlow {
+    0% { box-shadow: 0 0 80px rgba(26, 115, 232, 0.9), 0 0 30px rgba(255, 107, 107, 0.5); }
+    50% { box-shadow: 0 0 100px rgba(26, 115, 232, 1.2), 0 0 50px rgba(255, 107, 107, 0.7); }
+    100% { box-shadow: 0 0 80px rgba(26, 115, 232, 0.9), 0 0 30px rgba(255, 107, 107, 0.5); }
+}
+
+/* Mobile Adjustments */
+@media (max-width: 768px) {
+    .signup-modal-content {
+        padding: 25px;
+        max-width: 90%;
+        border-radius: 20px;
+        box-shadow: 0 0 60px rgba(26, 115, 232, 0.7);
+    }
+    .signup-modal-content h2 {
+        font-size: 1.5em;
+        margin-bottom: 20px;
+    }
+    .signup-modal-content label {
+        font-size: 1em;
+        margin: 15px 0;
+    }
+    .signup-modal-content input {
+        padding: 12px;
+        font-size: 1em;
+    }
+    .signup-submit-btn, .signup-modal-content button[type="button"] {
+        padding: 12px 20px;
+        font-size: 1em;
+    }
+    }
