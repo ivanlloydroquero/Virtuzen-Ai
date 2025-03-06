@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtuzen Ai Chatbot by Ivan</title>
+    <link rel="stylesheet" href="chatbot.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar" id="sidebar">
+            <div class="logo">
+                <i class="fas fa-brain"></i> Virtuzen Ai
+            </div>
+            <div class="sidebar-buttons">
+                <button class="new-chat" onclick="newChat()" title="New HoloChat">
+                    <i class="fas fa-plus"></i>
+                </button>
+                <button class="history-toggle" onclick="toggleHistory()" title="HoloHistory">
+                    <i class="fas fa-history"></i>
+                </button>
+            </div>
+            <div class="history-panel" id="historyPanel">
+                <input type="text" id="historySearch" placeholder="Search HoloChats..." oninput="filterHistory()">
+                <div class="history" id="chatHistory"></div>
+            </div>
+        </div>
+        <div class="main">
+            <div class="header">
+                <div class="menu-bar">
+                    <select id="modelSelect" onchange="updateModel()">
+                        <option value="deepthink">DeepThink Quantum Nexus</option>
+                        <option value="advanced">Advanced NeuroFusion</option>
+                        <option value="creative">Creative HoloMind Matrix</option>
+                        <option value="fast">NanoInstant Response</option>
+                    </select>
+                    <div class="status" id="aiStatus">Online</div>
+                    <button class="menu-btn" onclick="toggleMenu()" title="HoloMenu">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="menu-dropdown" id="menuDropdown">
+                        <button onclick="toggleTheme()" title="Toggle HoloTheme"><i class="fas fa-adjust"></i>Theme</button>
+                        <button onclick="showSettings()" title="Settings"><i class="fas fa-cog"></i> Settings</button>
+                        <button onclick="showHelp()" title="HoloHelp"><i class="fas fa-question"></i> Help</button>
+                        <button onclick="exportChat()" title="Export HoloChat"><i class="fas fa-download"></i> Export VirtuzenChat</button>
+                        <button onclick="signOut()" title="Sign Out"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
+                    </div>
+                </div>
+            </div>
+            <div class="chat-container" id="chatContainer">
+                <div class="chat-messages" id="chatMessages"></div>
+                <div class="suggestions" id="suggestions"></div>
+       <div class="chat-input">
+    <div class="input-tools">
+        <label for="fileInput" class="file-btn" title="Attach HoloData">
+            <i class="fas fa-paperclip"></i>
+        </label>
+        <input type="file" id="fileInput" accept=".txt,.pdf,.jpg,.png" multiple hidden onchange="handleFileUpload()">
+        <button class="voice-btn" onclick="toggleNeuralVoice()" title="Neural Voice">
+            <i class="fas fa-microphone"></i>
+        </button>
+        <button class="sentiment-btn" onclick="analyzeSentiment()" title="Sentiment Scan">
+            <i class="fas fa-heart-pulse"></i>
+        </button>
+        <button class="emotion-btn" onclick="detectEmotion()" title="Emotion Scan">
+            <i class="fas fa-face-smile"></i>
+        </button>
+        <button class="welcome-toggle" onclick="showWelcome()" title="Show Welcome Options">
+            <i class="fas fa-question"></i>
+        </button>
+    </div>
+    <textarea id="messageInput" placeholder="What do you want to know?" rows="3" oninput="updateSuggestions()"></textarea>
+    <button class="send-btn" onclick="sendMessage()" title="Transmit">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+</div>
+<div class="advanced-features">
+    <button onclick="generateInsight()" title="Quantum Insight">
+        <i class="fas fa-lightbulb"></i>
+    </button>
+    <button onclick="analyzeContext()" title="Holo Analysis">
+        <i class="fas fa-search"></i>
+    </button>
+    <button onclick="suggestQuestions()" title="Holo Suggestions">
+        <i class="fas fa-question-circle"></i>
+    </button>
+    <button onclick="projectHologram()" title="Holo Projection">
+        <i class="fas fa-hologram"></i>
+    </button>
+    <button onclick="simulateNeuralLink()" title="Neural Link">
+        <i class="fas fa-brain"></i>
+    </button>
+</div>
+        </div>
+    </div>
+    <div class="welcome-overlay" id="welcomeOverlay">
+        <div class="welcome-content">
+            <h3>Welcome user!</h3>
+            <div class="welcome-options">
+                <button class="welcome-btn" onclick="selectOption('Create HoloImage')" title="Create HoloImage">
+                    <i class="fas fa-image"></i> HoloImage
+                </button>
+                <button class="welcome-btn" onclick="selectOption('Analyze HoloImages')" title="Analyze HoloImages">
+                    <i class="fas fa-eye"></i> Analyze
+                </button>
+                <button class="welcome-btn" onclick="selectOption('Summarize NeuralText')" title="Summarize NeuralText">
+                    <i class="fas fa-file-alt"></i> Summarize
+                </button>
+                <button class="welcome-btn" onclick="selectOption('Make a Quantum Plan')" title="Make a Quantum Plan">
+                    <i class="fas fa-lightbulb"></i> Quantum Plan
+                </button>
+                <button class="welcome-btn" onclick="selectOption('Code Quantum')" title="Code Quantum">
+                    <i class="fas fa-code"></i> Code
+                </button>
+                <button class="welcome-btn" onclick="selectOption('Surprise me')" title="Surprise Me">
+                    <i class="fas fa-gift"></i> Surprise
+                </button>
+                <button class="welcome-btn" onclick="selectOption('Help me write')" title="Help Me Write">
+                    <i class="fas fa-pen"></i> Write
+                </button>
+                <button class="welcome-btn" onclick="selectOption('Brainstorm HoloIdeas')" title="Brainstorm HoloIdeas">
+                    <i class="fas fa-lightbulb"></i> Brainstorm
+                </button>
+                <button class="welcome-btn" onclick="selectOption('Analyze Quantum Data')" title="Analyze Quantum Data">
+                    <i class="fas fa-chart-bar"></i> Data Analysis
+                </button>
+                <button class="welcome-btn" onclick="selectOption('Get HoloAdvice')" title="Get HoloAdvice">
+                    <i class="fas fa-graduation-cap"></i> Advice
+                </button>
+                <button class="welcome-btn" onclick="selectOption('Simulate Neural Link')" title="Simulate Neural Link">
+                    <i class="fas fa-brain"></i> Neural Link
+                </button>
+                <button class="welcome-btn" onclick="selectOption('HoloEmotion Scan')" title="HoloEmotion Scan">
+                    <i class="fas fa-face-smile"></i> Emotion Scan
+                </button>
+            </div>
+            <button class="close-welcome" onclick="closeWelcome()" title="Hide">×</button>
+        </div>
+    </div>
+    <div class="modal" id="settingsModal">
+        <div class="modal-content">
+            <h2>HoloSettings 3000</h2>
+            <label>Response Speed (Femtoseconds):
+                <input type="range" id="responseSpeed" min="5" max="150" value="80" oninput="updateResponseSpeed()">
+            </label>
+            <label>Auto-Suggestions:
+                <input type="checkbox" id="autoSuggest" checked>
+            </label>
+            <label>Neural Voice:
+                <input type="checkbox" id="voiceActivate" checked>
+            </label>
+            <label>Sentiment Tracking:
+                <input type="checkbox" id="sentimentTrack" checked>
+            </label>
+            <label>Emotion Detection:
+                <input type="checkbox" id="emotionDetect" checked>
+            </label>
+            <label>Neural Link Simulation:
+                <input type="checkbox" id="neuralLink" checked>
+            </label>
+            <button onclick="closeModal()" title="Close">Close</button>
+        </div>
+    </div>
+    <script src="chatbot.js"></script>
+</body>
+</html>
