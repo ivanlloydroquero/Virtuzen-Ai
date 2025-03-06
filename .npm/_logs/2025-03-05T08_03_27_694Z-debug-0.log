@@ -1,0 +1,188 @@
+0 verbose cli /bin/node /data/data/com.termux/files/usr/bin/npm
+1 info using npm@10.9.2
+2 info using node@v23.6.1
+3 silly config load:file:/data/data/com.termux/files/usr/lib/node_modules/npm/npmrc
+4 silly config load:file:/data/data/com.termux/files/home/.npmrc
+5 silly config load:file:/data/data/com.termux/files/usr/etc/npmrc
+6 verbose title npm install acodex-server
+7 verbose argv "install" "--global" "acodex-server" "--ignore-scripts"
+8 verbose logfile logs-max:10 dir:/data/data/com.termux/files/home/.npm/_logs/2025-03-05T08_03_27_694Z-
+9 verbose logfile /data/data/com.termux/files/home/.npm/_logs/2025-03-05T08_03_27_694Z-debug-0.log
+10 silly packumentCache heap:1098907648 maxSize:274726912 maxEntrySize:137363456
+11 silly logfile done cleaning log files
+12 silly idealTree buildDeps
+13 silly fetch manifest acodex-server@*
+14 silly packumentCache full:https://registry.npmjs.org/acodex-server cache-miss
+15 http fetch GET 200 https://registry.npmjs.org/acodex-server 1357ms (cache miss)
+16 silly packumentCache full:https://registry.npmjs.org/acodex-server set size:undefined disposed:false
+17 silly placeDep ROOT acodex-server@1.1.7 OK for:  want: *
+18 silly fetch manifest @hono/node-server@^1.12.2
+19 silly packumentCache full:https://registry.npmjs.org/@hono%2fnode-server cache-miss
+20 silly fetch manifest @xterm/addon-serialize@^0.13.0
+21 silly packumentCache full:https://registry.npmjs.org/@xterm%2faddon-serialize cache-miss
+22 silly fetch manifest @xterm/headless@^5.5.0
+23 silly packumentCache full:https://registry.npmjs.org/@xterm%2fheadless cache-miss
+24 silly fetch manifest @xterm/xterm@^5.5.0
+25 silly packumentCache full:https://registry.npmjs.org/@xterm%2fxterm cache-miss
+26 silly fetch manifest commander@^11.1.0
+27 silly packumentCache full:https://registry.npmjs.org/commander cache-miss
+28 silly fetch manifest hono@^3.12.12
+29 silly packumentCache full:https://registry.npmjs.org/hono cache-miss
+30 silly fetch manifest node-pty@^1.0.0
+31 silly packumentCache full:https://registry.npmjs.org/node-pty cache-miss
+32 http fetch GET 200 https://registry.npmjs.org/commander 749ms (cache miss)
+33 silly packumentCache full:https://registry.npmjs.org/commander set size:undefined disposed:false
+34 silly fetch manifest ws@^8.18.0
+35 silly packumentCache full:https://registry.npmjs.org/ws cache-miss
+36 http fetch GET 200 https://registry.npmjs.org/@hono%2fnode-server 833ms (cache miss)
+37 silly packumentCache full:https://registry.npmjs.org/@hono%2fnode-server set size:undefined disposed:false
+38 http fetch GET 200 https://registry.npmjs.org/hono 934ms (cache miss)
+39 silly packumentCache full:https://registry.npmjs.org/hono set size:undefined disposed:false
+40 http fetch GET 200 https://registry.npmjs.org/ws 329ms (cache miss)
+41 silly packumentCache full:https://registry.npmjs.org/ws set size:undefined disposed:false
+42 http fetch GET 200 https://registry.npmjs.org/node-pty 1344ms (cache miss)
+43 silly packumentCache full:https://registry.npmjs.org/node-pty set size:undefined disposed:false
+44 http fetch GET 200 https://registry.npmjs.org/@xterm%2fxterm 2196ms (cache miss)
+45 silly packumentCache full:https://registry.npmjs.org/@xterm%2fxterm set size:undefined disposed:false
+46 http fetch GET 200 https://registry.npmjs.org/@xterm%2faddon-serialize 2242ms (cache miss)
+47 silly packumentCache full:https://registry.npmjs.org/@xterm%2faddon-serialize set size:undefined disposed:false
+48 http fetch GET 200 https://registry.npmjs.org/@xterm%2fheadless 2457ms (cache miss)
+49 silly packumentCache full:https://registry.npmjs.org/@xterm%2fheadless set size:undefined disposed:false
+50 silly fetch manifest hono@^4
+51 silly packumentCache full:https://registry.npmjs.org/hono cache-miss
+52 http cache https://registry.npmjs.org/hono 41ms (cache hit)
+53 silly packumentCache full:https://registry.npmjs.org/hono set size:4309672 disposed:false
+54 silly fetch manifest bufferutil@^4.0.1
+55 silly packumentCache full:https://registry.npmjs.org/bufferutil cache-miss
+56 http fetch GET 200 https://registry.npmjs.org/bufferutil 217ms (cache miss)
+57 silly packumentCache full:https://registry.npmjs.org/bufferutil set size:undefined disposed:false
+58 silly fetch manifest utf-8-validate@>=5.0.2
+59 silly packumentCache full:https://registry.npmjs.org/utf-8-validate cache-miss
+60 http fetch GET 200 https://registry.npmjs.org/utf-8-validate 225ms (cache miss)
+61 silly packumentCache full:https://registry.npmjs.org/utf-8-validate set size:undefined disposed:false
+62 silly placeDep node_modules/acodex-server @hono/node-server@1.13.8 OK for: acodex-server@1.1.7 want: ^1.12.2
+63 silly placeDep node_modules/acodex-server @xterm/addon-serialize@0.13.0 OK for: acodex-server@1.1.7 want: ^0.13.0
+64 silly placeDep node_modules/acodex-server @xterm/xterm@5.5.0 OK for: @xterm/addon-serialize@0.13.0 want: ^5.0.0
+65 silly placeDep node_modules/acodex-server @xterm/headless@5.5.0 OK for: acodex-server@1.1.7 want: ^5.5.0
+66 silly placeDep node_modules/acodex-server commander@11.1.0 OK for: acodex-server@1.1.7 want: ^11.1.0
+67 silly placeDep node_modules/acodex-server hono@3.12.12 OK for: acodex-server@1.1.7 want: ^3.12.12
+68 silly placeDep node_modules/acodex-server node-pty@1.0.0 OK for: acodex-server@1.1.7 want: ^1.0.0
+69 silly placeDep node_modules/acodex-server ws@8.18.1 OK for: acodex-server@1.1.7 want: ^8.18.0
+70 silly fetch manifest nan@^2.17.0
+71 silly packumentCache full:https://registry.npmjs.org/nan cache-miss
+72 http fetch GET 200 https://registry.npmjs.org/nan 278ms (cache miss)
+73 silly packumentCache full:https://registry.npmjs.org/nan set size:undefined disposed:false
+74 warn ERESOLVE overriding peer dependency {
+74 warn ERESOLVE   code: 'ERESOLVE',
+74 warn ERESOLVE   edge: {
+74 warn ERESOLVE     type: 'peer',
+74 warn ERESOLVE     name: 'hono',
+74 warn ERESOLVE     spec: '^4',
+74 warn ERESOLVE     error: 'INVALID',
+74 warn ERESOLVE     from: {
+74 warn ERESOLVE       name: '@hono/node-server',
+74 warn ERESOLVE       version: '1.13.8',
+74 warn ERESOLVE       location: 'node_modules/acodex-server/node_modules/@hono/node-server',
+74 warn ERESOLVE       isWorkspace: false,
+74 warn ERESOLVE       dependents: [Array]
+74 warn ERESOLVE     }
+74 warn ERESOLVE   },
+74 warn ERESOLVE   dep: {
+74 warn ERESOLVE     name: 'hono',
+74 warn ERESOLVE     version: '4.7.4',
+74 warn ERESOLVE     whileInstalling: {
+74 warn ERESOLVE       name: '@hono/node-server',
+74 warn ERESOLVE       version: '1.13.8',
+74 warn ERESOLVE       path: '/data/data/com.termux/files/usr/lib/node_modules/acodex-server/node_modules/@hono/node-server'
+74 warn ERESOLVE     },
+74 warn ERESOLVE     location: 'node_modules/hono',
+74 warn ERESOLVE     isWorkspace: false,
+74 warn ERESOLVE     dependents: [ [Object] ]
+74 warn ERESOLVE   },
+74 warn ERESOLVE   force: false,
+74 warn ERESOLVE   isMine: false,
+74 warn ERESOLVE   strictPeerDeps: false,
+74 warn ERESOLVE   current: {
+74 warn ERESOLVE     name: 'hono',
+74 warn ERESOLVE     version: '3.12.12',
+74 warn ERESOLVE     location: 'node_modules/acodex-server/node_modules/hono',
+74 warn ERESOLVE     isWorkspace: false,
+74 warn ERESOLVE     dependents: [ [Object] ]
+74 warn ERESOLVE   },
+74 warn ERESOLVE   peerConflict: {
+74 warn ERESOLVE     current: {
+74 warn ERESOLVE       name: 'hono',
+74 warn ERESOLVE       version: '3.12.12',
+74 warn ERESOLVE       location: 'node_modules/acodex-server/node_modules/hono',
+74 warn ERESOLVE       isWorkspace: false,
+74 warn ERESOLVE       dependents: [Array]
+74 warn ERESOLVE     },
+74 warn ERESOLVE     peer: {
+74 warn ERESOLVE       name: 'hono',
+74 warn ERESOLVE       version: '4.7.4',
+74 warn ERESOLVE       whileInstalling: [Object],
+74 warn ERESOLVE       location: 'node_modules/hono',
+74 warn ERESOLVE       isWorkspace: false,
+74 warn ERESOLVE       dependents: [Array]
+74 warn ERESOLVE     }
+74 warn ERESOLVE   }
+74 warn ERESOLVE }
+75 silly placeDep node_modules/acodex-server nan@2.22.2 OK for: node-pty@1.0.0 want: ^2.17.0
+76 silly reify mark retired [
+76 silly reify   '/data/data/com.termux/files/usr/lib/node_modules/acodex-server',
+76 silly reify   '/data/data/com.termux/files/usr/bin/axs',
+76 silly reify   '/data/data/com.termux/files/usr/bin/acodex-server',
+76 silly reify   '/data/data/com.termux/files/usr/bin/acodeX-server'
+76 silly reify ]
+77 silly reify moves {
+77 silly reify   '/data/data/com.termux/files/usr/lib/node_modules/acodex-server': '/data/data/com.termux/files/usr/lib/node_modules/.acodex-server-6jslKl6D',
+77 silly reify   '/data/data/com.termux/files/usr/bin/axs': '/data/data/com.termux/files/usr/bin/.axs-qk308kkR',
+77 silly reify   '/data/data/com.termux/files/usr/bin/acodex-server': '/data/data/com.termux/files/usr/bin/.acodex-server-7qJZ3yDs',
+77 silly reify   '/data/data/com.termux/files/usr/bin/acodeX-server': '/data/data/com.termux/files/usr/bin/.acodeX-server-afsgkwZR'
+77 silly reify }
+78 http cache @xterm/headless@https://registry.npmjs.org/@xterm/headless/-/headless-5.5.0.tgz 0ms (cache hit)
+79 http cache @xterm/xterm@https://registry.npmjs.org/@xterm/xterm/-/xterm-5.5.0.tgz 0ms (cache hit)
+80 http cache @xterm/addon-serialize@https://registry.npmjs.org/@xterm/addon-serialize/-/addon-serialize-0.13.0.tgz 0ms (cache hit)
+81 http cache acodex-server@https://registry.npmjs.org/acodex-server/-/acodex-server-1.1.7.tgz 0ms (cache hit)
+82 http cache hono@https://registry.npmjs.org/hono/-/hono-3.12.12.tgz 0ms (cache hit)
+83 http cache ws@https://registry.npmjs.org/ws/-/ws-8.18.1.tgz 0ms (cache hit)
+84 http cache node-pty@https://registry.npmjs.org/node-pty/-/node-pty-1.0.0.tgz 0ms (cache hit)
+85 http cache nan@https://registry.npmjs.org/nan/-/nan-2.22.2.tgz 0ms (cache hit)
+86 http cache commander@https://registry.npmjs.org/commander/-/commander-11.1.0.tgz 0ms (cache hit)
+87 http cache @hono/node-server@https://registry.npmjs.org/@hono/node-server/-/node-server-1.13.8.tgz 0ms (cache hit)
+88 silly tarball no local data for @xterm/headless@https://registry.npmjs.org/@xterm/headless/-/headless-5.5.0.tgz. Extracting by manifest.
+89 silly tarball no local data for @xterm/xterm@https://registry.npmjs.org/@xterm/xterm/-/xterm-5.5.0.tgz. Extracting by manifest.
+90 silly tarball no local data for @xterm/addon-serialize@https://registry.npmjs.org/@xterm/addon-serialize/-/addon-serialize-0.13.0.tgz. Extracting by manifest.
+91 silly tarball no local data for acodex-server@https://registry.npmjs.org/acodex-server/-/acodex-server-1.1.7.tgz. Extracting by manifest.
+92 silly tarball no local data for hono@https://registry.npmjs.org/hono/-/hono-3.12.12.tgz. Extracting by manifest.
+93 silly tarball no local data for ws@https://registry.npmjs.org/ws/-/ws-8.18.1.tgz. Extracting by manifest.
+94 silly tarball no local data for node-pty@https://registry.npmjs.org/node-pty/-/node-pty-1.0.0.tgz. Extracting by manifest.
+95 silly tarball no local data for nan@https://registry.npmjs.org/nan/-/nan-2.22.2.tgz. Extracting by manifest.
+96 silly tarball no local data for commander@https://registry.npmjs.org/commander/-/commander-11.1.0.tgz. Extracting by manifest.
+97 silly tarball no local data for @hono/node-server@https://registry.npmjs.org/@hono/node-server/-/node-server-1.13.8.tgz. Extracting by manifest.
+98 http fetch GET 200 https://registry.npmjs.org/ws/-/ws-8.18.1.tgz 369ms (cache miss)
+99 http fetch GET 200 https://registry.npmjs.org/acodex-server/-/acodex-server-1.1.7.tgz 402ms (cache miss)
+100 http fetch GET 200 https://registry.npmjs.org/node-pty/-/node-pty-1.0.0.tgz 696ms (cache miss)
+101 http fetch GET 200 https://registry.npmjs.org/@xterm/headless/-/headless-5.5.0.tgz 854ms (cache miss)
+102 http fetch GET 200 https://registry.npmjs.org/@xterm/addon-serialize/-/addon-serialize-0.13.0.tgz 869ms (cache miss)
+103 http fetch GET 200 https://registry.npmjs.org/nan/-/nan-2.22.2.tgz 881ms (cache miss)
+104 http fetch GET 200 https://registry.npmjs.org/commander/-/commander-11.1.0.tgz 893ms (cache miss)
+105 http fetch GET 200 https://registry.npmjs.org/hono/-/hono-3.12.12.tgz 931ms (cache miss)
+106 http fetch GET 200 https://registry.npmjs.org/@xterm/xterm/-/xterm-5.5.0.tgz 1094ms (cache miss)
+107 http fetch GET 200 https://registry.npmjs.org/@hono/node-server/-/node-server-1.13.8.tgz 1496ms (cache miss)
+108 silly CHANGE node_modules/acodex-server
+109 silly CHANGE node_modules/acodex-server/node_modules/@xterm/xterm
+110 silly CHANGE node_modules/acodex-server/node_modules/@xterm/headless
+111 silly CHANGE node_modules/acodex-server/node_modules/commander
+112 silly CHANGE node_modules/acodex-server/node_modules/@hono/node-server
+113 silly CHANGE node_modules/acodex-server/node_modules/@xterm/addon-serialize
+114 silly CHANGE node_modules/acodex-server/node_modules/hono
+115 silly CHANGE node_modules/acodex-server/node_modules/ws
+116 silly CHANGE node_modules/acodex-server/node_modules/nan
+117 silly CHANGE node_modules/acodex-server/node_modules/node-pty
+118 verbose cwd /data/data/com.termux/files/usr/lib/node_modules/acodex-server/node_modules/node-pty
+119 verbose os Linux 4.19.157-perf-28692735-abA235FXXS9EYB1
+120 verbose node v23.6.1
+121 verbose npm  v10.9.2
+122 verbose exit 0
+123 info ok
