@@ -130,17 +130,29 @@ function loadChats() {
         newChat();
     }
 }
+async function getBotResponse(message) {
+    aiStatus.textContent = "Processing...";
 
-async function getBotResponse(message, files) {
-    aiStatus.textContent = 'Processing via Quantum Nexus...';
-    await new Promise(resolve => setTimeout(resolve, responseSpeed));
-    const model = modelSelect.value;
-    updateUserBehavior(message);
-    const response = await generateResponse(model, message, files);
-    aiStatus.textContent = 'Online';
-    return response;
+    try {
+        let response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyB3zFhn6tEUub0SAvh2SopKwQg_syMaxRY", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: message }] }]
+            })
+        });
+
+        let data = await response.json();
+        aiStatus.textContent = "Online";
+
+        return data.candidates[0].content.parts[0].text;
+
+    } catch (error) {
+        console.error("API Error:", error);
+        aiStatus.textContent = "Error";
+        return "Error connecting to AI.";
+    }
 }
-
 const dailyLifeCategories = {
     greetings: ['Greetings, cosmic traveler', 'Hi from the 3000 era', 'Hey, holo-citizen', 'Bright cycle', 'Salutations, quantum being'],
     weather: ['Holo-starlight shining', 'Nano-storm detected', 'Chilled fusion mist', 'Warm quantum breeze', 'Holographic nebula'],
