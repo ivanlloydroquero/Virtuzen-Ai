@@ -53,47 +53,33 @@
             <div class="chat-container" id="chatContainer">
                 <div class="chat-messages" id="chatMessages"></div>
                 <div class="suggestions" id="suggestions"></div>
-       <div class="chat-input">
-    <div class="input-tools">
-        <label for="fileInput" class="file-btn" title="Attach HoloData">
-            <i class="fas fa-paperclip"></i>
-        </label>
-        <input type="file" id="fileInput" accept=".txt,.pdf,.jpg,.png" multiple hidden onchange="handleFileUpload()">
-        <button class="voice-btn" onclick="toggleNeuralVoice()" title="Neural Voice">
-            <i class="fas fa-microphone"></i>
-        </button>
-        <button class="sentiment-btn" onclick="analyzeSentiment()" title="Sentiment Scan">
-            <i class="fas fa-heart-pulse"></i>
-        </button>
-        <button class="emotion-btn" onclick="detectEmotion()" title="Emotion Scan">
-            <i class="fas fa-face-smile"></i>
-        </button>
-        <button class="welcome-toggle" onclick="showWelcome()" title="Show Welcome Options">
-            <i class="fas fa-question"></i>
-        </button>
-    </div>
-    <textarea id="messageInput" placeholder="What do you want to know?" rows="3" oninput="updateSuggestions()"></textarea>
-    <button class="send-btn" onclick="sendMessage()" title="Transmit">
-        <i class="fas fa-arrow-up"></i>
-    </button>
-</div>
-<div class="advanced-features">
-    <button onclick="generateInsight()" title="Quantum Insight">
-        <i class="fas fa-lightbulb"></i>
-    </button>
-    <button onclick="analyzeContext()" title="Holo Analysis">
-        <i class="fas fa-search"></i>
-    </button>
-    <button onclick="suggestQuestions()" title="Holo Suggestions">
-        <i class="fas fa-question-circle"></i>
-    </button>
-    <button onclick="projectHologram()" title="Holo Projection">
-        <i class="fas fa-hologram"></i>
-    </button>
-    <button onclick="simulateNeuralLink()" title="Neural Link">
-        <i class="fas fa-brain"></i>
-    </button>
-</div>
+   <div class="chat-input">
+        <div class="input-container">
+            <textarea id="messageInput" placeholder="Ask anything" rows="1" oninput="updateSuggestions()"></textarea>
+            <button class="tool-btn send-btn" onclick="sendMessage()" title="Transmit">
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            <div class="input-tools">
+                <button class="tool-btn voice-btn" onclick="toggleNeuralVoice()" title="Neural Voice">
+                    <i class="fas fa-microphone"></i>
+                </button>
+                <label for="fileInput" class="tool-btn file-btn" title="Attach HoloData">
+                    <i class="fas fa-paperclip"></i>
+                </label>
+                <input type="file" id="fileInput" accept=".txt,.pdf,.jpg,.png" multiple hidden onchange="handleFileUpload()">
+                <button class="tool-btn real-world-btn" onclick="realWorldIntegration()" title="Real World Integration">
+                    <i class="fas fa-globe"></i>
+                </button>
+                <button class="tool-btn autonomous-btn" onclick="autonomousTaskExecution()" title="Autonomous Task Execution">
+                    <i class="fas fa-robot"></i>
+                </button>
+                <button class="tool-btn multimodal-btn" onclick="multimodalUnderstanding()" title="Multimodal Understanding & Generation">
+                    <i class="fas fa-layer-group"></i>
+                </button>
+                <button class="tool-btn memory-btn" onclick="personalizedAIMemory()" title="Personalized AI Memory">
+                    <i class="fas fa-memory"></i>
+                </button>
+            </div>
         </div>
     </div>
     <div class="welcome-overlay" id="welcomeOverlay">
@@ -199,4 +185,4 @@
 </div>
     <script src="chatbot.js"></script>
 </body>
-                    </html>
+</html>
