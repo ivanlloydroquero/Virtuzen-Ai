@@ -628,14 +628,48 @@ function handleSignUp(event) {
     closeSignUpModal();
 }
 
-// If you’ve added login code, it would be here (e.g., lines 478-510), followed by exportChat()
 function exportChat() {
     const chatText = chats[currentChatId].map(m => `${m.isUser ? 'You' : 'AI'}: ${m.content}`).join('\n');
     const blob = new Blob([chatText], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `holochat_${currentChatId}.txt`;
+    a.download = `virtuzenchat_${currentChatId}.txt`;
     a.click();
     URL.revokeObjectURL(url);
+}
+function toggleAdvancedFeatures() {
+    const advancedFeatures = document.getElementById('advancedFeatures');
+    if (!advancedFeatures) {
+        console.error('Advanced features element not found!');
+        return;
+    }
+    console.log('Toggling advanced features'); // Debug log
+    advancedFeatures.classList.toggle('active');
+    const suggestions = document.getElementById('suggestions');
+    if (advancedFeatures.classList.contains('active')) {
+        suggestions.classList.remove('active');
+    } else {
+        if (autoSuggest && messageInput.value.trim().length >= 3) {
+            updateSuggestions();
+        }
+    }
+}
+function realWorldIntegration() {
+    addMessage("🌍 Real World Integration: Connecting to external systems for real-time data. What would you like to integrate?", false);
+    // Add logic to connect to real-world APIs or services
+}
+
+function autonomousTaskExecution() {
+    addMessage("🤖 Autonomous Task Execution: I can perform tasks independently. Please specify a task to execute.", false);
+    // Add logic for autonomous task handling
+}
+
+function multimodalUnderstanding() {
+    addMessage("📊 Multimodal Understanding & Generation: Processing text, images, and more. Upload data or describe your request!", false);
+    // Add logic for multimodal input/output
+}
+
+function personalizedAIMemory() {
+    addMessage("🧠 Personalized AI Memory: Recalling your preferences and past interactions. What memory would you like me to retrieve?", false);
 }
