@@ -29,11 +29,10 @@ function addMessage(content, isUser = false, chatId = currentChatId, reactions =
     messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
     messageDiv.innerHTML = `
         <div class="message-content">
-            ${content}
+            <div class"message-text">${content}</div>
             <div class="message-time">${getCurrentTime()}</div>
-            <button class="copy-btn" onclick="copyToClipboard(this.previousElementSibling.previousElementSibling.textContent)" title="Copy to HoloClipboard">
-                <i class="fas fa-copy"></i>
-            </button>
+            <button class="copy-btn" onclick="copyToClipboard('${content.replace(/'/g, "\\'")}')" title="Copy to HoloClipboard">
+            <i class="fas fa-copy"></i></button>
             <div class="reaction-bar">
                 <button class="reaction-btn" onclick="addReaction('${chatId}', ${chats[chatId].length}, '👍')" title="Like">👍</button>
                 <button class="reaction-btn" onclick="addReaction('${chatId}', ${chats[chatId].length}, '❤️')" title="Love">❤️</button>
@@ -130,27 +129,43 @@ function loadChats() {
         newChat();
     }
 }
-async function getBotResponse(message) {
-    aiStatus.textContent = "Processing...";
+async function getBotResponse(message, files = []) {
+    aiStatus.textContent = "Thinking...";
 
     try {
-        let response = await fetch("https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyB3zFhn6tEUub0SAvh2SopKwQg_syMaxRY", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                contents: [{ parts: [{ text: message }] }]
-            })
-        });
+        const response = await fetch(
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyB3zFhn6tEUub0SAvh2SopKwQg_syMaxRY",
+            {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: message }] }],
+                }),
+            }
+        );
 
-        let data = await response.json();
+        if (!response.ok) throw new Error("API request failed");
+
+        const data = await response.json();
         aiStatus.textContent = "Online";
+        
+        let botReply = data.candidates[0].content.parts[0].text.trim();
+        
+        // Enhance with Virtuzen flavor if files are attached
+        if (files.length) {
+            botReply += ` [Quantum Analysis: Processed ${files.map(f => f.name).join(', ')} in the 3000 nexus.]`;
+        }
 
-        return data.candidates[0].content.parts[0].text;  // Extracts the AI response
+        return botReply;
 
     } catch (error) {
-        console.error("API Error:", error);
-        aiStatus.textContent = "Error";
-        return "Error connecting to AI.";
+        console.error("Quantum API Error:", error);
+        aiStatus.textContent = "Quantum Disruption Detected";
+        
+        // Fallback to local response generation
+        const model = modelSelect.value;
+        const fallbackResponse = generateResponse(model, message, files);
+        return `⚠ Quantum Link Error: ${fallbackResponse}`;
     }
 }
 
@@ -255,21 +270,25 @@ function generateResponse(model, message, files) {
     const randomCategory = categoryKeys[Math.floor(Math.random() * categoryKeys.length)];
     const categoryValue = dailyLifeCategories[randomCategory][Math.floor(Math.random() * 5)];
     
-    if (files.length) {
-        return `${responseTemplates[model][0](message, `Analyzing ${files.map(f => f.name).join(', ')} with 3000 quantum nexus tech`)} ${categoryValue}.`;
+    const baseResponse = responseTemplates[model][Math.floor(Math.random() * 3)](message, categoryValue);
+    
+if (files.length) {
+        return `${baseResponse} [HoloData Processed: ${files.map(f => f.name).join(', ')} integrated into the 3000 matrix.]`;
     }
     
     const freqWord = Object.keys(userBehavior.freq).sort((a, b) => userBehavior.freq[b] - userBehavior.freq[a])[0] || '';
-    const template = responseTemplates[model][Math.floor(Math.random() * 3)];
-    return `${template(message, categoryValue)} ${freqWord ? `Noticed you mention "${freqWord}" often—related thoughts for our transhuman world in 3000?` : ''}`;
+    return freqWord 
+        ? `${baseResponse} Noticed "${freqWord}" recurring in your neural stream—any 3000 insights to explore?`
+        : baseResponse;
 }
 
 async function sendMessage() {
     const message = messageInput.value.trim();
     const files = Array.from(fileInput.files);
     if (!message && !files.length) return;
-
-    addMessage(files.length ? `${message} [HoloData: ${files.map(f => f.name).join(', ')}]` : message, true);
+    
+const userMessage = files.length ? `${message} [HoloData: ${files.map(f => f.name).join(', ')}]` : message;
+    addMessage(userMessage, true);
     messageInput.value = '';
     fileInput.value = '';
     suggestions.innerHTML = '';
@@ -672,4 +691,5 @@ function multimodalUnderstanding() {
 
 function personalizedAIMemory() {
     addMessage("🧠 Personalized AI Memory: Recalling your preferences and past interactions. What memory would you like me to retrieve?", false);
-}
+    // Add logic to access and utilize user-specific memory
+                                                                                 }
