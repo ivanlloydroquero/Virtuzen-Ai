@@ -905,48 +905,110 @@ body {
         font-size: 1em;
         border-radius: 25px;
     }
-    .chat-input {
-        padding: 15px;
-        gap: 10px;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        flex-wrap: wrap;
-        box-shadow: 0 -5px 15px rgba(0,0,0,0.3);
-    }
-    .input-tools {
-        gap: 8px;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-    .file-btn, .voice-btn, .sentiment-btn, .emotion-btn, .welcome-toggle, .send-btn {
-        padding: 12px;
-        width: 40px;
-        height: 40px;
-        border-radius: 40px;
-        box-shadow: 0 0 15px rgba(26, 115, 232, 0.5);
-    }
-    .chat-input textarea {
-        padding: 15px 20px;
-        max-height: 150px;
-        min-height: 50px;
-        border-radius: 30px;
-        font-size: 1em;
-        min-width: 150px;
-        flex: 1 1 auto;
-    }
-    .advanced-features {
-        padding: 15px;
-        gap: 10px;
-        box-shadow: 0 -8px 20px rgba(0,0,0,0.4);
-    }
-    .advanced-features button {
-        padding: 12px;
-        width: 40px;
-        height: 40px;
-        border-radius: 40px;
-        box-shadow: 0 0 15px rgba(255, 107, 107, 0.6);
-    }
+.chat-input {
+    padding: 15px 20px;
+    border-top: 3px solid #404040;
+    background: linear-gradient(135deg, #1a1a1a, #252525);
+    position: relative;
+    z-index: 5;
+    box-shadow: 0 -8px 25px rgba(0, 0, 0, 0.4);
+    border-radius: 0 0 15px 15px; /* Updated to round bottom corners */
+    overflow: hidden;
+    margin-bottom: 0; /* Remove any margin causing space */
+    min-height: 80px;
+}
+
+.input-container {
+    display: flex;
+    flex-direction: column; /* Stack textarea and send button vertically */
+    position: relative;
+    background: rgba(51, 51, 51, 0.9);
+    border-radius: 25px;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4), inset 0 0 10px rgba(26, 115, 232, 0.1);
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+}
+.chat-input textarea {
+    width: 100%;
+    min-height: 50px;
+    padding: 15px 60px 15px 20px; /* Add padding on the right for the send button */
+    border: none;
+    border-radius: 25px;
+    outline: none;
+    resize: none;
+    overflow: auto;
+    max-height: 100px;
+    background: transparent;
+    color: #e0e0e0;
+    font-size: 1.1em;
+    transition: box-shadow 0.2s, transform 0.2s;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
+}
+
+.chat-input textarea:focus {
+    box-shadow: 0 0 40px rgba(26, 115, 232, 0.9), inset 0 0 15px rgba(26, 115, 232, 0.3);
+    transform: scale(1.02);
+}
+
+.input-tools {
+    display: flex;
+    gap: 10px;
+    padding: 10px 20px;
+    justify-content: flex-start;
+    background: transparent;
+    border-top: 1px solid rgba(64, 64, 64, 0.5);
+}
+
+.tool-btn {
+    padding: 10px;
+    background: rgba(26, 115, 232, 0.2);
+    color: #e0e0e0;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 10px rgba(26, 115, 232, 0.5), inset 0 0 5px rgba(26, 115, 232, 0.2);
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+}
+
+.tool-btn:hover {
+    background: rgba(26, 115, 232, 0.5);
+    transform: scale(1.15);
+    box-shadow: 0 0 20px rgba(26, 115, 232, 0.8), inset 0 0 10px rgba(26, 115, 232, 0.4);
+    color: #fff;
+}
+
+.voice-btn {
+    background: rgba(255, 107, 107, 0.2);
+}
+
+.voice-btn:hover {
+    background: rgba(255, 107, 107, 0.5);
+    box-shadow: 0 0 20px rgba(255, 107, 107, 0.8);
+}
+.send-btn {
+    position: absolute;
+    top: 10px; /* Adjust this value to position it above the input tools */
+    right: 10px;
+    background: rgba(26, 115, 232, 0.5);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    padding: 0;
+    z-index: 10;
+}
+.send-btn:hover {
+    background: rgba(13, 71, 161, 0.7);
+    transform: scale(1.15);
+    box-shadow: 0 0 20px rgba(26, 115, 232, 0.8);
+}
     .welcome-overlay {
         bottom: 10px;
         width: 95%;
