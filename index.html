@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Virtuzen Ai Chatbot by Ivan</title>
+    <title>Virtuzen AI Assistant by Ivan</title>
     <link rel="stylesheet" href="chatbot.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
@@ -11,24 +11,19 @@
     <div class="container">
         <div class="sidebar" id="sidebar">
             <div class="logo">
-                <i class="fas fa-brain"></i> Virtuzen Ai (BETA)
-            </div>
-            <div class="sidebar-buttons">
-                <button class="new-chat" onclick="newChat()" title="New HoloChat">
-                    <i class="fas fa-plus"></i>
-                </button>
-                <button class="history-toggle" onclick="toggleHistory()" title="HoloHistory">
-                    <i class="fas fa-history"></i>
-                </button>
+                <i class="fas fa-brain"></i> Virtuzen AI (BETA)
             </div>
             <div class="history-panel" id="historyPanel">
-                <input type="text" id="historySearch" placeholder="Search HoloChats..." oninput="filterHistory()">
+                <div class="history-header">
+                    <input type="text" id="historySearch" placeholder="Search HoloChats..." oninput="filterHistory()">
+                    <button class="close-btn" onclick="toggleHistory()" title="Close History"><i class="fas fa-times"></i></button>
+                </div>
                 <div class="history" id="chatHistory"></div>
             </div>
         </div>
         <div class="main">
-            <div class="header">
-                <div class="menu-bar">
+            <div class="header" id="header">
+                <div class="menu-bar" id="menuBar">
                     <select id="modelSelect" onchange="updateModel()">
                         <option value="deepthink">DeepThink Quantum Nexus</option>
                         <option value="advanced">Advanced NeuroFusion</option>
@@ -40,149 +35,142 @@
                         <i class="fas fa-bars"></i>
                     </button>
                     <div class="menu-dropdown" id="menuDropdown">
-                        <button onclick="toggleTheme()" title="Toggle HoloTheme"><i class="fas fa-adjust"></i>Theme</button>
+                        <button onclick="newChat()" title="New HoloChat"><i class="fas fa-plus"></i> New Chat</button>
+                        <button onclick="toggleHistory()" title="HoloHistory"><i class="fas fa-history"></i> History</button>
+                        <button onclick="toggleTheme()" title="Toggle HoloTheme"><i class="fas fa-adjust"></i> Theme</button>
                         <button onclick="showSettings()" title="Settings"><i class="fas fa-cog"></i> Settings</button>
+                        <button onclick="showFeedbackModal()" title="Send Feedback"><i class="fas fa-comment"></i> Feedback</button>
                         <button onclick="showHelp()" title="HoloHelp"><i class="fas fa-question"></i> Help</button>
-                        <button onclick="exportChat()" title="Export VirtuzenChat"><i class="fas fa-download"></i> Export VirtuzenChat</button>
+                        <button onclick="exportChat()" title="Export VirtuzenChat"><i class="fas fa-download"></i> Export Chat</button>
                         <button onclick="showLoginModal()" title="Login"><i class="fas fa-sign-in-alt"></i> Login</button>
-                       <button onclick="showSignUpModal()" title="Sign Up"><i class="fas fa-user-plus"></i> Sign Up</button> 
+                        <button onclick="showSignUpModal()" title="Sign Up"><i class="fas fa-user-plus"></i> Sign Up</button>
                         <button onclick="signOut()" title="Sign Out"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
                     </div>
                 </div>
             </div>
             <div class="chat-container" id="chatContainer">
+                <div class="welcome-section" id="welcomeSection">
+                    <h2>Welcome to Virtuzen AI!</h2>
+                    <p>Your evolving AI assistant, designed to adapt, learn, and innovate. As technology advances, so do I, continuously upgrading to provide smarter, faster, and more intuitive support. Tap ‘Get Started’ and step into the future of AI-driven assistance.</p>
+                    <button class="get-started-btn" onclick="startChat()" title="Get Started">
+                        <i class="fas fa-rocket"></i> Get Started
+                    </button>
+                </div>
                 <div class="chat-messages" id="chatMessages"></div>
-                <div class="suggestions" id="suggestions"></div>
-   <div class="chat-input">
-        <div class="input-container">
-            <textarea id="messageInput" placeholder="Ask anything" rows="1" oninput="updateSuggestions()"></textarea>
-            <button class="tool-btn send-btn" onclick="sendMessage()" title="Transmit">
-                <i class="fas fa-arrow-up"></i>
-            </button>
-            <div class="input-tools">
-                <button class="tool-btn voice-btn" onclick="toggleNeuralVoice()" title="Neural Voice">
-                    <i class="fas fa-microphone"></i>
-                </button>
-                <label for="fileInput" class="tool-btn file-btn" title="Attach HoloData">
-                    <i class="fas fa-paperclip"></i>
-                </label>
-                <input type="file" id="fileInput" accept=".txt,.pdf,.jpg,.png" multiple hidden onchange="handleFileUpload()">
-                <button class="tool-btn real-world-btn" onclick="realWorldIntegration()" title="Real World Integration">
-                    <i class="fas fa-globe"></i>
-                </button>
-                <button class="tool-btn autonomous-btn" onclick="autonomousTaskExecution()" title="Autonomous Task Execution">
-                    <i class="fas fa-robot"></i>
-                </button>
-                <button class="tool-btn multimodal-btn" onclick="multimodalUnderstanding()" title="Multimodal Understanding & Generation">
-                    <i class="fas fa-layer-group"></i>
-                </button>
-                <button class="tool-btn memory-btn" onclick="personalizedAIMemory()" title="Personalized AI Memory">
-                    <i class="fas fa-memory"></i>
-                </button>
+                <div class="chat-input" id="chatInputSection" style="display: none;">
+                    <div class="input-container">
+                        <textarea id="messageInput" placeholder="Ask anything" rows="1" oninput="updatePlaceholder()"></textarea>
+                        <button class="send-btn" onclick="sendMessage()" title="Transmit">
+                            <i class="fas fa-arrow-up"></i>
+                        </button>
+                        <div class="input-tools">
+                            <button class="tool-btn voice-btn" onclick="toggleNeuralVoice()" title="Neural Voice">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <label for="fileInput" class="tool-btn file-btn" title="Attach HoloData">
+                                <i class="fas fa-paperclip"></i>
+                            </label>
+                            <input type="file" id="fileInput" accept=".txt,.pdf,.jpg,.png" multiple hidden onchange="handleFileUpload()">
+                            <button class="tool-btn real-world-btn" onclick="realWorldIntegration()" title="Real World Integration">
+                                <i class="fas fa-globe"></i>
+                            </button>
+                            <button class="tool-btn autonomous-btn" onclick="autonomousTaskExecution()" title="Autonomous Task Execution">
+                                <i class="fas fa-robot"></i>
+                            </button>
+                            <button class="tool-btn multimodal-btn" onclick="multimodalUnderstanding()" title="Multimodal Understanding">
+                                <i class="fas fa-layer-group"></i>
+                            </button>
+                            <button class="tool-btn memory-btn" onclick="personalizedAIMemory()" title="Personalized AI Memory">
+                                <i class="fas fa-memory"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal" id="settingsModal">
+                <div class="modal-content">
+                    <h2>Virtuzen Settings</h2>
+                    <label>Response Speed (Femtoseconds):
+                        <input type="range" id="responseSpeed" min="5" max="150" value="80" oninput="updateResponseSpeed()">
+                    </label>
+                    <label>Auto-Suggestions:
+                        <input type="checkbox" id="autoSuggest" checked>
+                    </label>
+                    <label>Neural Voice:
+                        <input type="checkbox" id="voiceActivate" checked>
+                    </label>
+                    <label>Sentiment Tracking:
+                        <input type="checkbox" id="sentimentTrack" checked>
+                    </label>
+                    <label>Emotion Detection:
+                        <input type="checkbox" id="emotionDetect" checked>
+                    </label>
+                    <label>Neural Link Simulation:
+                        <input type="checkbox" id="neuralLink" checked>
+                    </label>
+                    <button onclick="closeModal()" title="Close">Close</button>
+                </div>
+            </div>
+            <!-- Feedback Modal -->
+            <div class="modal" id="feedbackModal">
+                <div class="modal-content feedback-modal-content">
+                    <h2><i class="fas fa-comment"></i> Send Feedback</h2>
+                    <form id="feedbackForm">
+                        <label for="feedbackText">Your Feedback:</label>
+                        <textarea id="feedbackText" rows="4" placeholder="Share your thoughts or suggestions..." required></textarea>
+                        <label for="userEmail">Your Email (Optional):</label>
+                        <input type="email" id="userEmail" placeholder="your-email@gmail.com">
+                        <button type="submit" class="feedback-submit-btn" title="Send Feedback"><i class="fas fa-paper-plane"></i> Send</button>
+                        <button type="button" onclick="closeFeedbackModal()" title="Close"><i class="fas fa-times"></i> Close</button>
+                    </form>
+                </div>
+            </div>
+            <div class="modal" id="loginModal">
+                <div class="modal-content login-modal-content">
+                    <h2><i class="fas fa-sign-in-alt"></i> Login to your account</h2>
+                    <form id="loginForm" onsubmit="handleLogin(event)">
+                        <label for="loginEmail">Email:
+                            <input type="email" id="loginEmail" placeholder="your-email@gmail.com" required>
+                        </label>
+                        <label for="loginPassword">Password:
+                            <input type="password" id="loginPassword" placeholder="Access your matrix" required>
+                        </label>
+                        <button type="submit" class="login-submit-btn" title="Enter the Virtuzen World!"><i class="fas fa-arrow-right"></i> Login</button>
+                        <button type="button" onclick="closeLoginModal()" title="Close"><i class="fas fa-times"></i> Close</button>
+                    </form>
+                </div>
+            </div>
+            <div class="modal" id="signUpModal">
+                <div class="modal-content signup-modal-content">
+                    <h2><i class="fas fa-user-plus"></i> Create an account</h2>
+                    <form id="signUpForm" onsubmit="handleSignUp(event)">
+                        <label for="signupUsername">Username:
+                            <input type="text" id="signupUsername" placeholder="Enter your username" required>
+                        </label>
+                        <label for="signupEmail">Email:
+                            <input type="email" id="signupEmail" placeholder="your-email@gmail.com" required>
+                        </label>
+                        <label for="signupPassword">Password:
+                            <input type="password" id="signupPassword" placeholder="Secure your matrix" required>
+                        </label>
+                        <button type="submit" class="signup-submit-btn" title="Join the Virtuzen World!"><i class="fas fa-arrow-right"></i> Sign Up</button>
+                        <button type="button" onclick="closeSignUpModal()" title="Close"><i class="fas fa-times"></i> Close</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-    <div class="welcome-overlay" id="welcomeOverlay">
-        <div class="welcome-content">
-            <h3>Welcome user!</h3>
-            <div class="welcome-options">
-                <button class="welcome-btn" onclick="selectOption('Create HoloImage')" title="Create HoloImage">
-                    <i class="fas fa-image"></i> HoloImage
-                </button>
-                <button class="welcome-btn" onclick="selectOption('Analyze HoloImages')" title="Analyze HoloImages">
-                    <i class="fas fa-eye"></i> Analyze
-                </button>
-                <button class="welcome-btn" onclick="selectOption('Summarize NeuralText')" title="Summarize NeuralText">
-                    <i class="fas fa-file-alt"></i> Summarize
-                </button>
-                <button class="welcome-btn" onclick="selectOption('Make a Quantum Plan')" title="Make a Quantum Plan">
-                    <i class="fas fa-lightbulb"></i> Quantum Plan
-                </button>
-                <button class="welcome-btn" onclick="selectOption('Code Quantum')" title="Code Quantum">
-                    <i class="fas fa-code"></i> Code
-                </button>
-                <button class="welcome-btn" onclick="selectOption('Surprise me')" title="Surprise Me">
-                    <i class="fas fa-gift"></i> Surprise
-                </button>
-                <button class="welcome-btn" onclick="selectOption('Help me write')" title="Help Me Write">
-                    <i class="fas fa-pen"></i> Write
-                </button>
-                <button class="welcome-btn" onclick="selectOption('Brainstorm HoloIdeas')" title="Brainstorm HoloIdeas">
-                    <i class="fas fa-lightbulb"></i> Brainstorm
-                </button>
-                <button class="welcome-btn" onclick="selectOption('Analyze Quantum Data')" title="Analyze Quantum Data">
-                    <i class="fas fa-chart-bar"></i> Data Analysis
-                </button>
-                <button class="welcome-btn" onclick="selectOption('Get HoloAdvice')" title="Get HoloAdvice">
-                    <i class="fas fa-graduation-cap"></i> Advice
-                </button>
-                <button class="welcome-btn" onclick="selectOption('Simulate Neural Link')" title="Simulate Neural Link">
-                    <i class="fas fa-brain"></i> Neural Link
-                </button>
-                <button class="welcome-btn" onclick="selectOption('HoloEmotion Scan')" title="HoloEmotion Scan">
-                    <i class="fas fa-face-smile"></i> Emotion Scan
-                </button>
-            </div>
-            <button class="close-welcome" onclick="closeWelcome()" title="Hide">×</button>
-        </div>
-    </div>
-    <div class="modal" id="settingsModal">
-        <div class="modal-content">
-            <h2>Virtuzen Settings</h2>
-            <label>Response Speed (Femtoseconds):
-                <input type="range" id="responseSpeed" min="5" max="150" value="80" oninput="updateResponseSpeed()">
-            </label>
-            <label>Auto-Suggestions:
-                <input type="checkbox" id="autoSuggest" checked>
-            </label>
-            <label>Neural Voice:
-                <input type="checkbox" id="voiceActivate" checked>
-            </label>
-            <label>Sentiment Tracking:
-                <input type="checkbox" id="sentimentTrack" checked>
-            </label>
-            <label>Emotion Detection:
-                <input type="checkbox" id="emotionDetect" checked>
-            </label>
-            <label>Neural Link Simulation:
-                <input type="checkbox" id="neuralLink" checked>
-            </label>
-            <button onclick="closeModal()" title="Close">Close</button>
-        </div>
-    </div>
-    <div class="modal" id="loginModal">
-    <div class="modal-content login-modal-content">
-        <h2><i class="fas fa-sign-in-alt"></i>Login to your account</h2>
-        <form id="loginForm" onsubmit="handleLogin(event)">
-            <label for="loginEmail">Email:
-                <input type="email" id="loginEmail" placeholder="your-email@gmail.com" required>
-            </label>
-            <label for="loginPassword">Password:
-                <input type="password" id="loginPassword" placeholder="Access your matrix" required>
-            </label>
-            <button type="submit" class="login-submit-btn" title="Enter the Virtuzen World!"><i class="fas fa-arrow-right"></i> Login</button>
-            <button type="button" onclick="closeLoginModal()" title="Close"><i class="fas fa-times"></i> Close</button>
-        </form>
-    </div>
-</div>
-<div class="modal" id="signUpModal">
-    <div class="modal-content signup-modal-content">
-        <h2><i class="fas fa-user-plus"></i>Create your account</h2>
-        <form id="signUpForm" onsubmit="handleSignUp(event)">
-            <label for="signupUsername">Username:
-                <input type="text" id="signupUsername" placeholder="Enter your username" required>
-            </label>
-            <label for="signupEmail">Email:
-                <input type="email" id="signupEmail" placeholder="your-email@gmail.com" required>
-            </label>
-            <label for="signupPassword"> Password:
-                <input type="password" id="signupPassword" placeholder="Secure your matrix" required>
-            </label>
-            <button type="submit" class="signup-submit-btn" title="Join the Virtuzen World!"><i class="fas fa-arrow-right"></i> Sign Up</button>
-            <button type="button" onclick="closeSignUpModal()" title="Close"><i class="fas fa-times"></i> Close</button>
-        </form>
-    </div>
-</div>
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2.6.4/dist/email.min.js"></script>
     <script src="chatbot.js"></script>
+    <script>
+        (function() {
+            emailjs.init('KEcljWsuMJcucBgNt');
+        })();
+        function showHelp() {
+            alert('Help is on the way! This feature is under development.');
+        }
+    </script>
+    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'91d84a43aa92b0c3',t:'MTc0MTQ5OTM3Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'91d885978e1bb00d',t:'MTc0MTUwMTgwNy4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
-</html>
+                            </html>
