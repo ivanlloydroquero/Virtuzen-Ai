@@ -5,8 +5,7 @@ const chatHistory = document.getElementById('chatHistory');
 const historyPanel = document.getElementById('historyPanel');
 const modelSelect = document.getElementById('modelSelect');
 const aiStatus = document.getElementById('aiStatus');
-const suggestions = document.getElementById('suggestions');
-const welcomeOverlay = document.getElementById('welcomeOverlay');
+const header = document.getElementById('header');
 let currentChatId = 0;
 let chats = {};
 let voiceActive = false;
@@ -18,76 +17,153 @@ let sentimentTrack = true;
 let emotionDetect = true;
 let neuralLink = true;
 let userBehavior = { freq: {}, lastInput: '', sentiment: [], emotions: [] };
-let hologramActive = false;
+
+const sentimentKeywords = {
+    positive: ['happy', 'great', 'awesome', 'good', 'love', 'excellent'],
+    negative: ['sad', 'bad', 'terrible', 'hate', 'awful', 'angry'],
+    neutral: ['okay', 'fine', 'normal', 'so-so']
+};
+
+const intentKeywords = {
+    question: ['what', 'why', 'how', 'where', 'when', 'who', 'can you', 'tell me'],
+    command: ['do', 'make', 'create', 'generate', 'execute'],
+    statement: ['i think', 'i feel', 'i believe', 'my opinion']
+};
 
 function getCurrentTime() {
     return new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', timeZone: 'UTC' });
 }
 
-function addMessage(content, isUser = false, chatId = currentChatId, reactions = {}) {
+function addMessage(content, isUser = false, chatId = currentChatId, thoughtProcess = null, thoughtTime = 2) {
     const messageDiv = document.createElement('div');
     messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
-    messageDiv.innerHTML = `
+
+    let thoughtHTML = '';
+    if (!isUser && thoughtProcess) {
+        thoughtHTML = `
+            <div class="thought-process">
+                <div class="thought-header" onclick="toggleThought(this)">
+                    <i class="fas fa-lightbulb"></i> Thought for ${thoughtTime}s
+                    <span class="expand-text">Expand for details</span>
+                    <i class="fas fa-chevron-down thought-toggle"></i>
+                </div>
+                <div class="thought-content">
+                    <p class="thought-text" id="thought-text-${Date.now()}">${thoughtProcess}</p>
+                </div>
+            </div>
+        `;
+    }
+
+    let messageContentHTML = `
         <div class="message-content">
-            <div class"message-text">${content}</div>
+            <div class="message-text">${content}</div>
             <div class="message-time">${getCurrentTime()}</div>
-            <button class="copy-btn" onclick="copyToClipboard('${content.replace(/'/g, "\\'")}')" title="Copy to HoloClipboard">
-            <i class="fas fa-copy"></i></button>
-            <div class="reaction-bar">
-                <button class="reaction-btn" onclick="addReaction('${chatId}', ${chats[chatId].length}, '👍')" title="Like">👍</button>
-                <button class="reaction-btn" onclick="addReaction('${chatId}', ${chats[chatId].length}, '❤️')" title="Love">❤️</button>
-                <button class="reaction-btn" onclick="addReaction('${chatId}', ${chats[chatId].length}, '😂')" title="Laugh">😂</button>
-                <button class="reaction-btn" onclick="addReaction('${chatId}', ${chats[chatId].length}, '😢')" title="Sad">😢</button>
-                <button class="reaction-btn" onclick="addReaction('${chatId}', ${chats[chatId].length}, '😡')" title="Angry">😡</button>
+            <div class="response-options">
+                <button class="response-btn" onclick="regenerateResponse('${chatId}', ${chats[chatId].length})" title="Regenerate Response"><i class="fas fa-sync"></i></button>
+                <button class="response-btn" onclick="copyToClipboard('${content.replace(/'/g, "\\'")}')" title="Copy to Clipboard"><i class="fas fa-copy"></i></button>
+                <button class="response-btn" onclick="rateResponse('${chatId}', ${chats[chatId].length}, 'good')" title="Good Response"><i class="fas fa-thumbs-up"></i></button>
+                <button class="response-btn" onclick="rateResponse('${chatId}', ${chats[chatId].length}, 'bad')" title="Bad Response"><i class="fas fa-thumbs-down"></i></button>
+                <button class="response-btn" onclick="changeModel()" title="Change Model"><i class="fas fa-exchange-alt"></i></button>
+                <button class="response-btn" onclick="readAloud('${content.replace(/'/g, "\\'")}')" title="Read Aloud"><i class="fas fa-volume-up"></i></button>
             </div>
         </div>
     `;
+
+    messageDiv.innerHTML = `${thoughtHTML}${messageContentHTML}`;
     chatMessages.appendChild(messageDiv);
     chatMessages.scrollTop = chatMessages.scrollHeight;
-    ensureInputVisible();
+
+    const messageContent = messageDiv.querySelector('.message-content');
+    messageContent.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const options = messageContent.querySelector('.response-options');
+        document.querySelectorAll('.response-options.active').forEach(opt => {
+            if (opt !== options) opt.classList.remove('active');
+        });
+        options.classList.toggle('active');
+    });
 
     if (!chats[chatId]) chats[chatId] = [];
-    chats[chatId].push({ content, isUser, timestamp: Date.now(), reactions });
+    chats[chatId].push({ content, isUser, timestamp: Date.now(), rating: null, thoughtProcess });
     saveChats();
-    analyzeSentimentForMessage(content, isUser);
-    detectEmotionForMessage(content, isUser);
+    if (isUser) updateUserBehavior(content);
+}
+
+function toggleThought(element) {
+    const thoughtContent = element.nextElementSibling;
+    const toggleIcon = element.querySelector('.thought-toggle');
+    thoughtContent.classList.toggle('expanded');
+    toggleIcon.classList.toggle('fa-chevron-down');
+    toggleIcon.classList.toggle('fa-chevron-up');
+}
+
+document.addEventListener('click', (e) => {
+    if (!e.target.closest('.message-content')) {
+        document.querySelectorAll('.response-options.active').forEach(opt => {
+            opt.classList.remove('active');
+        });
+    }
+});
+
+function showHelpText() {
+    const existingHelpText = document.getElementById('help-text');
+    if (!existingHelpText) {
+        const helpText = document.createElement('div');
+        helpText.id = 'help-text';
+        helpText.textContent = 'How can I help you today?';
+        document.querySelector('.chat-container').appendChild(helpText);
+    }
+}
+
+function toggleHelpText() {
+    const helpText = document.getElementById('help-text');
+    if (messageInput.value.trim() || (chats[currentChatId] && chats[currentChatId].length > 0)) {
+        if (helpText) helpText.remove();
+    } else if (!helpText) {
+        showHelpText();
+    }
 }
 
 function copyToClipboard(text) {
-    navigator.clipboard.writeText(text).then(() => alert('Copied to HoloClipboard via neural link!'));
+    navigator.clipboard.writeText(text).then(() => alert('Copied to clipboard!'));
 }
 
-function addReaction(chatId, index, emoji) {
-    chats[chatId][index].reactions[emoji] = (chats[chatId][index].reactions[emoji] || 0) + 1;
+async function regenerateResponse(chatId, index) {
+    const message = chats[chatId][index - 1].content;
+    const response = await getBotResponse(message);
+    chats[chatId][index - 1] = { content: response, isUser: false, timestamp: Date.now(), rating: null };
+    loadChat(chatId);
+}
+
+function rateResponse(chatId, index, rating) {
+    chats[chatId][index - 1].rating = rating;
     saveChats();
-    loadChat(currentChatId);
 }
 
-function ensureInputVisible() {
-    const input = document.querySelector('.chat-input');
-    const messages = chatMessages;
-    messages.scrollTop = messages.scrollHeight;
-    input.style.position = 'relative';
-    input.style.zIndex = '5';
-    if (messages.scrollHeight > messages.clientHeight) {
-        messages.addEventListener('scroll', () => {
-            if (messages.scrollTop + messages.clientHeight >= messages.scrollHeight - 30) {
-                input.style.bottom = '0';
-            } else {
-                input.style.bottom = '20px';
-            }
-        }, { passive: true });
+function changeModel() {
+    modelSelect.focus();
+    addMessage('Select a new model from above.', false);
+}
+
+function readAloud(text) {
+    if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        speechSynthesis.speak(utterance);
+    } else {
+        alert('Text-to-speech not supported in this browser.');
     }
 }
 
 function newChat() {
     currentChatId = Date.now();
     chatMessages.innerHTML = '';
-    addHistoryItem(`HoloChat ${new Date().toLocaleDateString()} ${getCurrentTime()}`);
+    const helpText = document.getElementById('help-text');
+    if (helpText) helpText.remove();
+    showHelpText();
+    addHistoryItem(`Chat ${new Date().toLocaleDateString()} ${getCurrentTime()}`);
     chats[currentChatId] = [];
     userBehavior = { freq: {}, lastInput: '', sentiment: [], emotions: [] };
-    suggestions.innerHTML = '';
-    welcomeOverlay.style.display = 'flex'; // Show welcome on new chat
+    header.classList.remove('hidden');
 }
 
 function addHistoryItem(title) {
@@ -95,19 +171,25 @@ function addHistoryItem(title) {
     item.className = 'history-item';
     item.innerHTML = `<i class="fas fa-comment"></i> <span>${title}</span>`;
     item.onclick = () => {
-        loadChat(title);
+        loadChat(title.split(' ').slice(1).join(' '));
         toggleHistory();
+        header.classList.add('hidden');
     };
     chatHistory.insertBefore(item, chatHistory.firstChild);
 }
 
 function loadChat(title) {
-    const id = Object.keys(chats).find(key => chats[key][0]?.timestamp === parseInt(key));
+    const id = Object.keys(chats).find(key => {
+        const firstMsg = chats[key][0];
+        return firstMsg && `${new Date(firstMsg.timestamp).toLocaleDateString()} ${getCurrentTime()}` === title;
+    });
     if (id) {
         currentChatId = id;
         chatMessages.innerHTML = '';
-        chats[id].forEach((msg, idx) => addMessage(msg.content, msg.isUser, id, msg.reactions));
-        welcomeOverlay.style.display = 'none'; // Hide welcome on load chat
+        const helpText = document.getElementById('help-text');
+        if (helpText) helpText.remove();
+        chats[id].forEach(msg => addMessage(msg.content, msg.isUser, id, msg.thoughtProcess));
+        toggleHelpText();
     }
 }
 
@@ -121,17 +203,88 @@ function loadChats() {
         chats = JSON.parse(saved);
         Object.keys(chats).forEach(id => {
             const firstMsg = chats[id][0];
-            addHistoryItem(firstMsg ? `HoloChat ${new Date(firstMsg.timestamp).toLocaleDateString()} ${getCurrentTime()}` : `HoloChat ${id}`);
+            addHistoryItem(`Chat ${new Date(firstMsg.timestamp).toLocaleDateString()} ${getCurrentTime()}`);
         });
         currentChatId = Object.keys(chats)[0] || Date.now();
-        loadChat(currentChatId);
+        loadChat(`Chat ${new Date(chats[currentChatId]?.[0]?.timestamp || Date.now()).toLocaleDateString()} ${getCurrentTime()}`);
     } else {
-        newChat();
+        currentChatId = Date.now();
+        chats[currentChatId] = [];
+        addHistoryItem(`Chat ${new Date().toLocaleDateString()} ${getCurrentTime()}`);
+    }
+    const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
+    if (storedUser.username) {
+        addMessage(`Welcome back ${storedUser.username}!`, false);
     }
 }
+
+function parseMessage(message) {
+    const words = message.toLowerCase().split(/\s+/);
+    let sentiment = 'neutral';
+    let intent = 'statement';
+    let keywords = [];
+
+    for (const word of words) {
+        if (sentimentKeywords.positive.includes(word)) {
+            sentiment = 'positive';
+            break;
+        } else if (sentimentKeywords.negative.includes(word)) {
+            sentiment = 'negative';
+            break;
+        }
+    }
+
+    const messageLower = message.toLowerCase();
+    for (const [type, keywords] of Object.entries(intentKeywords)) {
+        if (keywords.some(keyword => messageLower.startsWith(keyword) || messageLower.includes(` ${keyword} `))) {
+            intent = type;
+            break;
+        }
+    }
+
+    const stopWords = ['the', 'a', 'an', 'is', 'are', 'to', 'in', 'for', 'and', 'or'];
+    keywords = words.filter(word => !stopWords.includes(word) && word.length > 2);
+
+    return { sentiment, intent, keywords };
+}
+
+function generateThoughtProcess(parsedMessage) {
+    return new Promise(resolve => {
+        const { sentiment, intent, keywords } = parsedMessage;
+        const thoughtTextId = `thought-text-${Date.now()}`;
+        let thoughtProcess = "🤔 ";
+        addMessage("", false, currentChatId, thoughtProcess, 2);
+        const thoughtText = document.getElementById(thoughtTextId);
+        if (thoughtText) thoughtText.classList.add('processing');
+
+        let fullThought = `🤔 Let me break this down in detail:\n\n**Intent Analysis:** ${intent === 'question' ? `I’ve identified that you’re posing a question. This suggests you’re seeking information or clarification.` : intent === 'command' ? `I’ve detected a command. This indicates you’d like me to perform a specific action or task.` : `This appears to be a statement, likely expressing a thought, opinion, or observation.`}\n\n**Sentiment Analysis:** Your tone seems to lean toward ${sentiment}. ${sentiment === 'positive' ? `This positive vibe might reflect enthusiasm or satisfaction, which I’ll consider in my response.` : sentiment === 'negative' ? `The negative tone could indicate frustration or concern, so I’ll aim to address that sensitively.` : `A neutral tone suggests a balanced or factual approach, which I’ll match accordingly.`}\n\n**Keyword Extraction:** ${keywords.length > 0 ? `I’ve extracted the following key topics for focus: ${keywords.join(', ')}. These terms will guide my response to ensure relevance.` : `I couldn’t identify specific keywords, so I’ll provide a broad, context-aware reply based on the full message.`}\n\n**Contextual Considerations:** I’ll also take into account your previous inputs and the current conversation flow. ${userBehavior.lastInput ? `Your last input was "${userBehavior.lastInput}", which might influence the continuity of this response.` : ''} I’ll cross-reference this with my knowledge base to ensure accuracy and depth.\n\n**Response Strategy:** I’ll proceed by ${intent === 'question' ? 'delivering a detailed answer with examples' : intent === 'command' ? 'executing the task with precision' : 'engaging thoughtfully with your statement'}. This approach aims to maximize usefulness and align with your intent.`;
+
+        let index = 0;
+        const interval = setInterval(() => {
+            if (index < fullThought.length) {
+                thoughtText.textContent += fullThought[index];
+                index++;
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            } else {
+                clearInterval(interval);
+                thoughtText.classList.remove('processing');
+                resolve(thoughtProcess);
+            }
+        }, 20);
+
+        setTimeout(() => {
+            clearInterval(interval);
+            if (thoughtText && index < fullThought.length) {
+                thoughtText.textContent = fullThought;
+                thoughtText.classList.remove('processing');
+                resolve(fullThought);
+            }
+        }, 2000);
+    });
+}
+
 async function getBotResponse(message, files = []) {
     aiStatus.textContent = "Thinking...";
-
     try {
         const response = await fetch(
             "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=AIzaSyB3zFhn6tEUub0SAvh2SopKwQg_syMaxRY",
@@ -143,67 +296,35 @@ async function getBotResponse(message, files = []) {
                 }),
             }
         );
-
         if (!response.ok) throw new Error("API request failed");
-
         const data = await response.json();
         aiStatus.textContent = "Online";
-        
         let botReply = data.candidates[0].content.parts[0].text.trim();
-        
-        // Enhance with Virtuzen flavor if files are attached
         if (files.length) {
-            botReply += ` [Quantum Analysis: Processed ${files.map(f => f.name).join(', ')} in the 3000 nexus.]`;
+            botReply += ` [Processed: ${files.map(f => f.name).join(', ')}]`;
         }
-
         return botReply;
-
     } catch (error) {
-        console.error("Quantum API Error:", error);
-        aiStatus.textContent = "Quantum Disruption Detected";
-        
-        // Fallback to local response generation
-        const model = modelSelect.value;
-        const fallbackResponse = generateResponse(model, message, files);
-        return `⚠ Quantum Link Error: ${fallbackResponse}`;
+        console.error("API Error:", error);
+        aiStatus.textContent = "Error";
+        return `Error: Could not generate response. [Fallback: ${generateResponse(modelSelect.value, message, files)}]`;
     }
 }
 
-const dailyLifeCategories = {
-    greetings: ['Greetings, cosmic traveler', 'Hi from the 3000 era', 'Hey, holo-citizen', 'Bright cycle', 'Salutations, quantum being'],
-    weather: ['Holo-starlight shining', 'Nano-storm detected', 'Chilled fusion mist', 'Warm quantum breeze', 'Holographic nebula'],
-    food: ['Try quantum fusion pasta', 'Synth-holo-pizza recommended', 'Nano-energy salad', 'Holo-grilled protein matrix', 'Virtual quantum sushi'],
-    activities: ['Holo-walk in the quantumverse', 'Read a neural tome', 'Watch a holo-film matrix', 'Train in the cyber-neural gym', 'Play quantum neural games'],
-    work: ['Complete that quantum nexus report', 'Sync with your AI overseer', 'Plan the holo-meeting matrix', 'Take a nano-regen break', 'Review the neural fusion project'],
-    health: ['Hydrate with smart nano-water', 'Rest in the regen-chamber', 'Stretch in zero-g holo-space', 'Take your quantum nano-meds', 'Track steps via neural matrix'],
-    shopping: ['Acquire holo-groceries from the quantum market', 'Need quantum boots?', 'Check metaverse fusion deals', 'Buy a holo-gift matrix', 'Stock up on nano-energy snacks'],
-    travel: ['Plan a quantum voyage', 'Book a holo-flight matrix', 'Pack light in nano-space', 'Explore the quantumverse', 'Rent a neural fusion vehicle'],
-    emotions: ['Feeling optimal in 3000?', 'Bit stressed in the quantum matrix?', 'Excited in this era?', 'Calm your neural waves', 'Need a holo-laugh matrix?'],
-    time: ['Early quantum cycle', 'Midday fusion pulse', 'Late nano-cycle matrix', 'Time accelerates in 3000', 'Evening holo-dusk fusion']
+const responseTemplates = {
+    deepthink: msg => `Deep analysis of "${msg}": Quantum insights from 3000.`,
+    advanced: msg => `Structured response to "${msg}": Logical output.`,
+    creative: msg => `Creative take on "${msg}": Imagine this in 3000!`,
+    fast: msg => `Quick reply to "${msg}": Instant 3000 response.`
 };
 
-const responseTemplates = {
-    deepthink: [
-        (msg, cat) => `Reflecting on "${msg}": ${cat}. This invites a quantum-nexus exploration—perhaps a transdimensional leap in 3000 awaits.`,
-        (msg, cat) => `Deep dive into "${msg}": ${cat}. It’s a thread worth pulling; holographic-neural insights unfold in our cosmic age.`,
-        (msg, cat) => `Pondering "${msg}": ${cat}. My quantum nexus hums with curiosity—what’s the next layer in this transhuman era?`
-    ],
-    advanced: [
-        (msg, cat) => `Analyzing "${msg}": ${cat}. Step 1: Contextualize with neural fusion. Step 2: Deduce with quantum matrix. Result: 3000 insight.`,
-        (msg, cat) => `Logic on "${msg}": ${cat}. If A, then B—here’s the structured outcome for our transdimensional paradigm.`,
-        (msg, cat) => `Evaluating "${msg}": ${cat}. Data points align via quantum fusion matrix; conclusion follows seamlessly in 3000.`
-    ],
-    creative: [
-        (msg, cat) => `"${msg}" sparks: ${cat}. Imagine a 3000 world where this twists into a holographic-neural adventure!`,
-        (msg, cat) => `From "${msg}": ${cat}. A creative leap—let’s project a transdimensional reality scene together!`,
-        (msg, cat) => `"${msg}" ignites: ${cat}. What if we spun this into a quantum epic for the future?`
-    ],
-    fast: [
-        (msg, cat) => `"${msg}"? ${cat}. Nano-instant, sharp, and optimized for 3000’s speed matrix!`,
-        (msg, cat) => `Fast take on "${msg}": ${cat}. Boom—answered in femtoseconds!`,
-        (msg, cat) => `"${msg}" hits: ${cat}. Instant clarity, no delay in this quantum era matrix!`
-    ]
-};
+function generateResponse(model, message, files) {
+    let response = responseTemplates[model](message);
+    if (files.length) {
+        response += ` [Files: ${files.map(f => f.name).join(', ')}]`;
+    }
+    return response;
+}
 
 function updateUserBehavior(message) {
     const words = message.toLowerCase().split(' ');
@@ -211,95 +332,33 @@ function updateUserBehavior(message) {
         userBehavior.freq[word] = (userBehavior.freq[word] || 0) + 1;
     });
     userBehavior.lastInput = message;
-    analyzeSentiment(message);
-    detectEmotion(message);
-}
-
-function analyzeSentiment(message) {
-    if (!sentimentTrack) return;
-    const sentimentWords = {
-        positive: ['happy', 'great', 'awesome', 'excited', 'good', 'optimal', 'joyful'],
-        negative: ['sad', 'bad', 'terrible', 'angry', 'stressed', 'distressed', 'painful'],
-        neutral: ['ok', 'fine', 'normal', 'okay', 'standard', 'neutral', 'average']
-    };
-    let sentiment = 'neutral';
-    if (sentimentWords.positive.some(w => message.toLowerCase().includes(w))) sentiment = 'positive';
-    else if (sentimentWords.negative.some(w => message.toLowerCase().includes(w))) sentiment = 'negative';
-    userBehavior.sentiment.push({ message, sentiment, timestamp: Date.now() });
-}
-
-function detectEmotion(message) {
-    if (!emotionDetect) return;
-    const emotionWords = {
-        happy: ['happy', 'joyful', 'excited', 'great', 'awesome'],
-        sad: ['sad', 'depressed', 'terrible', 'painful', 'down'],
-        angry: ['angry', 'furious', 'mad', 'irritated', 'enraged'],
-        neutral: ['ok', 'fine', 'normal', 'okay', 'standard'],
-        surprised: ['surprised', 'shocked', 'amazed', 'wow', 'unbelievable']
-    };
-    let emotion = 'neutral';
-    for (let [emo, words] of Object.entries(emotionWords)) {
-        if (words.some(w => message.toLowerCase().includes(w))) {
-            emotion = emo;
-            break;
-        }
-    }
-    userBehavior.emotions.push({ message, emotion, timestamp: Date.now() });
-}
-
-function analyzeSentimentForMessage(content, isUser) {
-    if (!sentimentTrack || !isUser) return;
-    const sentiment = userBehavior.sentiment[userBehavior.sentiment.length - 1]?.sentiment || 'neutral';
-    if (sentiment === 'negative') {
-        addMessage(`I sense distress in your quantum wave. Shall I adjust my holo-tone or offer transdimensional support in 3000?`, false);
-    } else if (sentiment === 'positive') {
-        addMessage(`Your positivity resonates in the quantum matrix! How can I enhance your 3000 experience further?`, false);
-    }
-}
-
-function detectEmotionForMessage(content, isUser) {
-    if (!emotionDetect || !isUser) return;
-    const emotion = userBehavior.emotions[userBehavior.emotions.length - 1]?.emotion || 'neutral';
-    if (emotion !== 'neutral') {
-        addMessage(`🔮 HoloEmotion Scan 3000: I detect a ${emotion} neural signature. Shall I adapt my response or project a holo-emotion matrix?`, false);
-    }
-}
-
-function generateResponse(model, message, files) {
-    const categoryKeys = Object.keys(dailyLifeCategories);
-    const randomCategory = categoryKeys[Math.floor(Math.random() * categoryKeys.length)];
-    const categoryValue = dailyLifeCategories[randomCategory][Math.floor(Math.random() * 5)];
-    
-    const baseResponse = responseTemplates[model][Math.floor(Math.random() * 3)](message, categoryValue);
-    
-if (files.length) {
-        return `${baseResponse} [HoloData Processed: ${files.map(f => f.name).join(', ')} integrated into the 3000 matrix.]`;
-    }
-    
-    const freqWord = Object.keys(userBehavior.freq).sort((a, b) => userBehavior.freq[b] - userBehavior.freq[a])[0] || '';
-    return freqWord 
-        ? `${baseResponse} Noticed "${freqWord}" recurring in your neural stream—any 3000 insights to explore?`
-        : baseResponse;
 }
 
 async function sendMessage() {
     const message = messageInput.value.trim();
     const files = Array.from(fileInput.files);
     if (!message && !files.length) return;
-    
-const userMessage = files.length ? `${message} [HoloData: ${files.map(f => f.name).join(', ')}]` : message;
+
+    const userMessage = files.length ? `${message} [Files: ${files.map(f => f.name).join(', ')}]` : message;
     addMessage(userMessage, true);
     messageInput.value = '';
     fileInput.value = '';
-    suggestions.innerHTML = '';
+
+    const parsedMessage = parseMessage(message);
+    const thoughtProcess = await generateThoughtProcess(parsedMessage);
 
     const response = await getBotResponse(message, files);
-    addMessage(response);
+    addMessage(response, false, currentChatId);
+    toggleHelpText();
 }
 
 function toggleHistory() {
     historyPanel.classList.toggle('active');
-    document.getElementById('sidebar').classList.toggle('collapsed');
+    if (!historyPanel.classList.contains('active')) {
+        header.classList.remove('hidden');
+    } else {
+        header.classList.add('hidden');
+    }
 }
 
 function toggleMenu() {
@@ -340,9 +399,50 @@ function exportChat() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `holochat_${currentChatId}.txt`;
+    a.download = `chat_${currentChatId}.txt`;
     a.click();
     URL.revokeObjectURL(url);
+}
+
+function showLoginModal() {
+    document.getElementById('loginModal').style.display = 'flex';
+    document.getElementById('loginEmail').focus();
+}
+
+function closeLoginModal() {
+    document.getElementById('loginModal').style.display = 'none';
+    document.getElementById('loginForm').reset();
+}
+
+function handleLogin(event) {
+    event.preventDefault();
+    const email = document.getElementById('loginEmail').value;
+    const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
+    if (storedUser.email === email) {
+        addMessage(`Welcome back ${storedUser.username}!`, false);
+        closeLoginModal();
+    } else {
+        addMessage('Login failed. Please sign up.', false);
+    }
+}
+
+function showSignUpModal() {
+    document.getElementById('signUpModal').style.display = 'flex';
+    document.getElementById('signupUsername').focus();
+}
+
+function closeSignUpModal() {
+    document.getElementById('signUpModal').style.display = 'none';
+    document.getElementById('signUpForm').reset();
+}
+
+function handleSignUp(event) {
+    event.preventDefault();
+    const username = document.getElementById('signupUsername').value;
+    const email = document.getElementById('signupEmail').value;
+    localStorage.setItem('user', JSON.stringify({ username, email }));
+    addMessage(`Welcome ${username}!`, false);
+    closeSignUpModal();
 }
 
 function signOut() {
@@ -350,50 +450,16 @@ function signOut() {
     location.reload();
 }
 
-async function generateInsight() {
-    const lastMessages = chats[currentChatId].slice(-5).map(m => m.content).join(' ');
-    const insight = await generateResponse('deepthink', `Analyze: ${lastMessages}`, []);
-    addMessage(`🤓 Quantum Nexus Insight: ${insight}`);
-}
-
-async function analyzeContext() {
-    const context = chats[currentChatId].map(m => m.content).join(' ');
-    const analysis = await generateResponse('advanced', `Holo-analyze: ${context}`, []);
-    addMessage(`🔍 Holo Analysis Matrix: ${analysis}`);
-}
-
-async function suggestQuestions() {
-    const context = chats[currentChatId].slice(-3).map(m => m.content).join(' ');
-    const suggestionsList = [
-        `What if ${context.split(' ')[0]} evolved in 3000?`,
-        `How does ${context.split(' ')[1] || 'this'} impact our quantum future?`,
-        `Why might ${context.split(' ')[2] || 'that'} matter in a transhuman matrix?`
-    ];
-    addMessage(`❓ Holo Suggestions Matrix:\n${suggestionsList.join('\n')}`);
-}
-
-function updateSuggestions() {
-    if (!autoSuggest) return;
-    const input = messageInput.value.trim();
-    if (input.length < 3) {
-        suggestions.classList.remove('active');
-        return;
-    }
-
-    const suggest = [
-        `${input} - deeper 3000 insights?`,
-        `How about ${input} in a quantum nexus context?`,
-        `Why ${input} in our transhuman world?`
-    ];
-    suggestions.innerHTML = suggest.map(s => `<button class="suggestion-btn" onclick="messageInput.value='${s}'; sendMessage()">${s}</button>`).join('');
-    suggestions.classList.add('active');
+function updatePlaceholder() {
+    toggleHelpText();
 }
 
 function handleFileUpload() {
     const files = Array.from(fileInput.files);
     if (files.length) {
-        messageInput.value += ` [HoloData: ${files.map(f => f.name).join(', ')}]`;
+        messageInput.value += ` [Files: ${files.map(f => f.name).join(', ')}]`;
     }
+    removeHelpTextOnToolClick();
 }
 
 function updateModel() {
@@ -406,22 +472,19 @@ function updateResponseSpeed() {
 
 function toggleNeuralVoice() {
     if (!voiceActivate || !('webkitSpeechRecognition' in window)) {
-        alert('Neural voice not supported or disabled in 3000.');
+        alert('Voice not supported or disabled.');
         return;
     }
-
     if (!voiceActive) {
         recognition = new webkitSpeechRecognition();
-        recognition.continuous = false;
-        recognition.interimResults = false;
         recognition.onresult = (event) => {
             messageInput.value = event.results[0][0].transcript;
             sendMessage();
         };
-        recognition.onerror = () => alert('Neural voice error in quantum matrix.');
+        recognition.onerror = () => alert('Voice error.');
         recognition.onend = () => {
             voiceActive = false;
-            document.querySelector('.voice-btn').style.background = '#1a73e8';
+            document.querySelector('.voice-btn').style.background = 'linear-gradient(135deg, #1a73e8, #0a0f1c)';
         };
         recognition.start();
         voiceActive = true;
@@ -429,6 +492,7 @@ function toggleNeuralVoice() {
     } else {
         recognition.stop();
     }
+    removeHelpTextOnToolClick();
 }
 
 function filterHistory() {
@@ -438,87 +502,105 @@ function filterHistory() {
     });
 }
 
-function analyzeSentiment() {
-    if (!sentimentTrack) return;
-    const sentiment = userBehavior.sentiment[userBehavior.sentiment.length - 1]?.sentiment || 'neutral';
-    addMessage(`🔮 Sentiment Scan 3000: I detect a ${sentiment} quantum wave. Shall I adjust my holo-tone or offer transdimensional support?`, false);
+function realWorldIntegration() {
+    addMessage("Connecting to real-time data. Specify your request.", false);
+    removeHelpTextOnToolClick();
 }
 
-function detectEmotion() {
-    if (!emotionDetect) return;
-    const emotion = userBehavior.emotions[userBehavior.emotions.length - 1]?.emotion || 'neutral';
-    addMessage(`🔮 HoloEmotion Scan 3000: I detect a ${emotion} neural signature. Shall I adapt my response or project a holo-emotion matrix?`, false);
+function autonomousTaskExecution() {
+    addMessage("Specify a task for autonomous execution.", false);
+    removeHelpTextOnToolClick();
 }
 
-function projectHologram() {
-    if (!hologramActive) {
-        hologramActive = true;
-        addMessage(`🌌 Holo-Projection Activated: Visualizing your conversation in 4D quantum space. Interact with the neural-holo matrix for deeper insights!`, false);
-        chatMessages.style.background = 'linear-gradient(135deg, #1e1e1e, #333, #444)';
-        chatMessages.style.boxShadow = 'inset 0 0 80px rgba(26, 115, 232, 1)';
-        setTimeout(() => {
-            hologramActive = false;
-            chatMessages.style.background = '#1e1e1e';
-            chatMessages.style.boxShadow = 'inset 0 0 25px rgba(0,0,0,0.5)';
-            addMessage(`🌌 Holo-Projection Deactivated: Returning to standard quantum interface.`, false);
-        }, 8000);
-    } else {
-        addMessage(`🌌 Holo-Projection already active. Please wait for the quantum cycle to complete.`, false);
-    }
+function multimodalUnderstanding() {
+    addMessage("Upload data or describe your multimodal request.", false);
+    removeHelpTextOnToolClick();
 }
 
-function simulateNeuralLink() {
-    if (!neuralLink) return;
-    addMessage(`🧠 Neural Link Simulation 3000: Connecting to your consciousness via quantum thought waves. Share thoughts directly!`, false);
-    messageInput.value = '';
-    messageInput.placeholder = 'Think your query via neural link...';
-    setTimeout(() => {
-        messageInput.placeholder = 'Query the HoloMind...';
-        addMessage(`🧠 Neural Link Disconnected: Returning to standard input.`, false);
-    }, 6000);
+function personalizedAIMemory() {
+    addMessage("What memory would you like to retrieve?", false);
+    removeHelpTextOnToolClick();
 }
 
-function selectOption(option) {
-    messageInput.value = option;
-    sendMessage();
-    closeWelcome();
+function removeHelpTextOnToolClick() {
+    const helpText = document.getElementById('help-text');
+    if (helpText) helpText.remove();
 }
 
-function closeWelcome() {
-    welcomeOverlay.style.display = 'none';
-    localStorage.setItem('welcomeShown', 'true');
-}
+function startChat() {
+    const welcomeSection = document.getElementById('welcomeSection');
+    if (welcomeSection) welcomeSection.style.display = 'none';
 
-function showWelcome() {
-    welcomeOverlay.style.display = 'flex';
+    const chatInputSection = document.getElementById('chatInputSection');
+    if (chatInputSection) chatInputSection.style.display = 'block';
+
+    showHelpText();
+
+    const sendButton = document.querySelector('.send-btn');
+    const inputTools = document.querySelectorAll('.tool-btn');
+    const messageInputField = document.getElementById('messageInput');
+
+    if (sendButton) {
+        sendButton.removeAttribute('disabled');
+        sendButton.style.pointerEvents = 'auto';
+        if (!sendButton.onclick) sendButton.addEventListener('click', sendMessage);
+    } else console.error('Send button not found in DOM');
+
+    if (messageInputField) {
+        messageInputField.removeAttribute('disabled');
+        messageInputField.style.pointerEvents = 'auto';
+    } else console.error('Message input field not found in DOM');
+
+    inputTools.forEach(tool => {
+        tool.removeAttribute('disabled');
+        tool.style.pointerEvents = 'auto';
+        if (!tool.onclick) tool.addEventListener('click', () => {
+            if (tool.classList.contains('voice-btn')) toggleNeuralVoice();
+            else if (tool.classList.contains('file-btn')) fileInput.click();
+            else if (tool.classList.contains('real-world-btn')) realWorldIntegration();
+            else if (tool.classList.contains('autonomous-btn')) autonomousTaskExecution();
+            else if (tool.classList.contains('multimodal-btn')) multimodalUnderstanding();
+            else if (tool.classList.contains('memory-btn')) personalizedAIMemory();
+        });
+    });
+
+    document.querySelectorAll('.tool-btn').forEach(button => {
+        button.addEventListener('click', removeHelpTextOnToolClick);
+    });
 }
 
 window.onload = () => {
-    loadChats();
+    const saved = localStorage.getItem('chats');
+    if (saved) {
+        chats = JSON.parse(saved);
+        Object.keys(chats).forEach(id => {
+            const firstMsg = chats[id][0];
+            addHistoryItem(`Chat ${new Date(firstMsg.timestamp).toLocaleDateString()} ${getCurrentTime()}`);
+        });
+        currentChatId = Object.keys(chats)[0] || Date.now();
+        loadChat(`Chat ${new Date(chats[currentChatId]?.[0]?.timestamp || Date.now()).toLocaleDateString()} ${getCurrentTime()}`);
+    } else {
+        currentChatId = Date.now();
+        chats[currentChatId] = [];
+        addHistoryItem(`Chat ${new Date().toLocaleDateString()} ${getCurrentTime()}`);
+    }
+
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'dark') document.body.classList.add('dark');
-    if (!localStorage.getItem('welcomeShown')) {
-        welcomeOverlay.style.display = 'flex';
-        setTimeout(() => welcomeOverlay.style.opacity = '1', 100); // Smooth fade-in
-    } else {
-        welcomeOverlay.style.display = 'none';
-    }
-    document.querySelector('.welcome-overlay').addEventListener('mouseleave', () => {
-        if (!localStorage.getItem('welcomeShown')) {
-            welcomeOverlay.style.display = 'none';
-            localStorage.setItem('welcomeShown', 'true');
-        }
-    });
-    document.querySelector('.welcome-overlay').addEventListener('click', (e) => {
-        if (e.target.classList.contains('welcome-overlay') || e.target.classList.contains('close-welcome')) {
-            closeWelcome();
-        }
-    });
+
+    const welcomeSection = document.getElementById('welcomeSection');
+    const chatInputSection = document.getElementById('chatInputSection');
+    if (welcomeSection) welcomeSection.style.display = 'block';
+    if (chatInputSection) chatInputSection.style.display = 'none';
+
+    const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
+    if (storedUser.username) addMessage(`Welcome back ${storedUser.username}!`, false);
 };
 
 messageInput.addEventListener('input', () => {
     messageInput.style.height = 'auto';
-    messageInput.style.height = Math.min(messageInput.scrollHeight, 200) + 'px';
+    messageInput.style.height = Math.min(messageInput.scrollHeight, 150) + 'px';
+    updatePlaceholder();
 });
 
 messageInput.addEventListener('keypress', (e) => {
@@ -527,169 +609,50 @@ messageInput.addEventListener('keypress', (e) => {
         sendMessage();
     }
 });
-function signUp() {
-    window.location.href = 'signup.html';
-}
-// After handleSignUp() around line 477
-function showLoginModal() {
-    const modal = document.getElementById('loginModal');
+// Feedback Functions
+function showFeedbackModal() {
+    const modal = document.getElementById('feedbackModal');
     modal.style.display = 'flex';
-    document.getElementById('loginEmail').focus(); // Auto-focus on email field
+    document.getElementById('feedbackText').focus();
 }
 
-function closeLoginModal() {
-    const modal = document.getElementById('loginModal');
+function closeFeedbackModal() {
+    const modal = document.getElementById('feedbackModal');
     modal.style.display = 'none';
-    document.getElementById('loginForm').reset(); // Reset form fields
+    document.getElementById('feedbackForm').reset();
 }
 
-function handleLogin(event) {
+function sendFeedback(event) {
     event.preventDefault();
-    const email = document.getElementById('loginEmail').value;
-    const password = document.getElementById('loginPassword').value;
+    const feedbackText = document.getElementById('feedbackText').value.trim();
+    const userEmail = document.getElementById('userEmail').value.trim();
+    const timestamp = new Date().toLocaleString();
 
-    // Placeholder login logic (replace with actual backend integration)
-    console.log('Login Attempt:', { email, password });
-    
-    // Simulate login by checking against stored user data in localStorage
-    const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
-    if (storedUser.email === email) { // Simplified check; add password hashing in production
-        addMessage(`🧠 Neural Login Successful: Welcome back ${storedUser.username} to the Quantum Matrix 3000!`, false);
-        closeLoginModal();
-    } else {
-        addMessage(`🧠 Login Failed: Invalid quantum credentials. Please verify your neural link or sign up.`, false);
-    }
-}
-// Around line 454-477 (after signOut())
-function showSignUpModal() {
-    const modal = document.getElementById('signUpModal');
-    modal.style.display = 'flex';
-    document.getElementById('signupUsername').focus();
-}
-
-function closeSignUpModal() {
-    const modal = document.getElementById('signUpModal');
-    modal.style.display = 'none';
-    document.getElementById('signUpForm').reset();
-}
-
-function handleSignUp(event) {
-    event.preventDefault();
-    const username = document.getElementById('signupUsername').value;
-    const email = document.getElementById('signupEmail').value;
-    const password = document.getElementById('signupPassword').value;
-    console.log('Sign Up Attempt:', { username, email, password });
-    addMessage(`🧠 Neural Sign Up Initiated: Welcome ${username} to the Quantum Matrix 3000!`, false);
-    localStorage.setItem('user', JSON.stringify({ username, email }));
-    closeSignUpModal();
-}
-
-// Add here, around line 478
-function showLoginModal() {
-    const modal = document.getElementById('loginModal');
-    modal.style.display = 'flex';
-    document.getElementById('loginEmail').focus();
-}
-
-function closeLoginModal() {
-    const modal = document.getElementById('loginModal');
-    modal.style.display = 'none';
-    document.getElementById('loginForm').reset();
-}
-
-function handleLogin(event) {
-    event.preventDefault();
-    const email = document.getElementById('loginEmail').value;
-    const password = document.getElementById('loginPassword').value;
-    console.log('Login Attempt:', { email, password });
-    const storedUser = JSON.parse(localStorage.getItem('user') || '{}');
-    if (storedUser.email === email) {
-        addMessage(`🧠 Neural Login Successful: Welcome back ${storedUser.username} to the Quantum Matrix 3000!`, false);
-        closeLoginModal();
-    } else {
-        addMessage(`🧠 Login Failed: Invalid quantum credentials. Please verify your neural link or sign up.`, false);
-    }
-}
-function exportChat() {
-    // ... existing code ...
-}
-// Around line 448-453 in original file
-function signOut() {
-    localStorage.clear();
-    location.reload();
-}
-
-// Insert Sign Up functions here, around line 454 (adjust if login code is present)
-function showSignUpModal() {
-    const modal = document.getElementById('signUpModal');
-    modal.style.display = 'flex';
-    document.getElementById('signupUsername').focus(); // Auto-focus on username field
-}
-
-function closeSignUpModal() {
-    const modal = document.getElementById('signUpModal');
-    modal.style.display = 'none';
-    document.getElementById('signUpForm').reset(); // Reset form fields
-}
-
-function handleSignUp(event) {
-    event.preventDefault();
-    const username = document.getElementById('signupUsername').value;
-    const email = document.getElementById('signupEmail').value;
-    const password = document.getElementById('signupPassword').value;
-
-    // Placeholder sign-up logic (replace with actual backend integration)
-    console.log('Sign Up Attempt:', { username, email, password });
-    addMessage(`🧠 Neural Sign Up Initiated: Welcome ${username} to the Quantum Matrix 3000!`, false);
-    
-    // Simulate storing user data (replace with real authentication logic)
-    localStorage.setItem('user', JSON.stringify({ username, email }));
-    closeSignUpModal();
-}
-
-function exportChat() {
-    const chatText = chats[currentChatId].map(m => `${m.isUser ? 'You' : 'AI'}: ${m.content}`).join('\n');
-    const blob = new Blob([chatText], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `virtuzenchat_${currentChatId}.txt`;
-    a.click();
-    URL.revokeObjectURL(url);
-}
-function toggleAdvancedFeatures() {
-    const advancedFeatures = document.getElementById('advancedFeatures');
-    if (!advancedFeatures) {
-        console.error('Advanced features element not found!');
+    if (!feedbackText) {
+        alert('Please enter your feedback.');
         return;
     }
-    console.log('Toggling advanced features'); // Debug log
-    advancedFeatures.classList.toggle('active');
-    const suggestions = document.getElementById('suggestions');
-    if (advancedFeatures.classList.contains('active')) {
-        suggestions.classList.remove('active');
-    } else {
-        if (autoSuggest && messageInput.value.trim().length >= 3) {
-            updateSuggestions();
-        }
-    }
-}
-function realWorldIntegration() {
-    addMessage("🌍 Real World Integration: Connecting to external systems for real-time data. What would you like to integrate?", false);
-    // Add logic to connect to real-world APIs or services
+
+    const templateParams = {
+        feedback: feedbackText,
+        userEmail: userEmail || 'Not provided',
+        timestamp: timestamp
+    };
+
+    console.log('Sending feedback with params:', templateParams);
+
+    emailjs.send('service_ywqk84r', 'template_f2n1rdg', templateParams)
+        .then((response) => {
+            console.log('SUCCESS!', response.status, response.text);
+            addMessage('Thank you for your feedback! It has been sent successfully.', false);
+            closeFeedbackModal();
+        }, (error) => {
+            console.error('FAILED...', error);
+            addMessage('Failed to send feedback. Please check the console for details or try again later.', false);
+            if (error.text) {
+                console.log('Error details:', error.text);
+            }
+        });
 }
 
-function autonomousTaskExecution() {
-    addMessage("🤖 Autonomous Task Execution: I can perform tasks independently. Please specify a task to execute.", false);
-    // Add logic for autonomous task handling
-}
-
-function multimodalUnderstanding() {
-    addMessage("📊 Multimodal Understanding & Generation: Processing text, images, and more. Upload data or describe your request!", false);
-    // Add logic for multimodal input/output
-}
-
-function personalizedAIMemory() {
-    addMessage("🧠 Personalized AI Memory: Recalling your preferences and past interactions. What memory would you like me to retrieve?", false);
-    // Add logic to access and utilize user-specific memory
-                                                                                 }
+document.getElementById('feedbackForm').addEventListener('submit', sendFeedback);
