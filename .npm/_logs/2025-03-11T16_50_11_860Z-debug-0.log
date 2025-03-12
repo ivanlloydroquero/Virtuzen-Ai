@@ -1,0 +1,210 @@
+0 verbose cli /data/data/com.termux/files/usr/bin/node /data/data/com.termux/files/usr/bin/npm
+1 info using npm@10.9.2
+2 info using node@v23.8.0
+3 silly config load:file:/data/data/com.termux/files/usr/lib/node_modules/npm/npmrc
+4 silly config load:file:/data/data/com.termux/files/home/.npmrc
+5 silly config load:file:/data/data/com.termux/files/usr/etc/npmrc
+6 verbose title npm install express dotenv cors axios
+7 verbose argv "install" "express" "dotenv" "cors" "axios"
+8 verbose logfile logs-max:10 dir:/data/data/com.termux/files/home/.npm/_logs/2025-03-11T16_50_11_860Z-
+9 verbose logfile /data/data/com.termux/files/home/.npm/_logs/2025-03-11T16_50_11_860Z-debug-0.log
+10 silly logfile start cleaning logs, removing 1 files
+11 silly packumentCache heap:1098907648 maxSize:274726912 maxEntrySize:137363456
+12 silly logfile done cleaning log files
+13 silly idealTree buildDeps
+14 silly fetch manifest express@^4.21.2
+15 silly packumentCache full:https://registry.npmjs.org/express cache-miss
+16 http fetch GET 200 https://registry.npmjs.org/express 1009ms (cache updated)
+17 silly packumentCache full:https://registry.npmjs.org/express set size:undefined disposed:false
+18 silly fetch manifest dotenv@*
+19 silly packumentCache full:https://registry.npmjs.org/dotenv cache-miss
+20 http fetch GET 200 https://registry.npmjs.org/dotenv 213ms (cache updated)
+21 silly packumentCache full:https://registry.npmjs.org/dotenv set size:undefined disposed:false
+22 silly fetch manifest cors@*
+23 silly packumentCache full:https://registry.npmjs.org/cors cache-miss
+24 http fetch GET 200 https://registry.npmjs.org/cors 418ms (cache updated)
+25 silly packumentCache full:https://registry.npmjs.org/cors set size:undefined disposed:false
+26 silly fetch manifest axios@*
+27 silly packumentCache full:https://registry.npmjs.org/axios cache-miss
+28 http fetch GET 200 https://registry.npmjs.org/axios 227ms (cache miss)
+29 silly packumentCache full:https://registry.npmjs.org/axios set size:undefined disposed:false
+30 silly placeDep ROOT axios@1.8.2 OK for: home@1.0.0 want: *
+31 silly placeDep ROOT cors@2.8.5 OK for: home@1.0.0 want: *
+32 silly placeDep ROOT dotenv@16.4.7 OK for: home@1.0.0 want: *
+33 silly placeDep ROOT express@4.21.2 REPLACE for: home@1.0.0 want: ^4.21.2
+34 silly fetch manifest follow-redirects@^1.15.6
+35 silly packumentCache full:https://registry.npmjs.org/follow-redirects cache-miss
+36 silly fetch manifest form-data@^4.0.0
+37 silly packumentCache full:https://registry.npmjs.org/form-data cache-miss
+38 silly fetch manifest proxy-from-env@^1.1.0
+39 silly packumentCache full:https://registry.npmjs.org/proxy-from-env cache-miss
+40 silly fetch manifest object-assign@^4
+41 silly packumentCache full:https://registry.npmjs.org/object-assign cache-miss
+42 http fetch GET 200 https://registry.npmjs.org/proxy-from-env 207ms (cache miss)
+43 silly packumentCache full:https://registry.npmjs.org/proxy-from-env set size:undefined disposed:false
+44 http fetch GET 200 https://registry.npmjs.org/form-data 362ms (cache miss)
+45 silly packumentCache full:https://registry.npmjs.org/form-data set size:undefined disposed:false
+46 http fetch GET 200 https://registry.npmjs.org/follow-redirects 524ms (cache updated)
+47 silly packumentCache full:https://registry.npmjs.org/follow-redirects set size:undefined disposed:false
+48 http fetch GET 200 https://registry.npmjs.org/object-assign 531ms (cache updated)
+49 silly packumentCache full:https://registry.npmjs.org/object-assign set size:undefined disposed:false
+50 silly placeDep ROOT follow-redirects@1.15.9 OK for: axios@1.8.2 want: ^1.15.6
+51 silly placeDep ROOT form-data@4.0.2 OK for: axios@1.8.2 want: ^4.0.0
+52 silly placeDep ROOT proxy-from-env@1.1.0 OK for: axios@1.8.2 want: ^1.1.0
+53 silly fetch manifest asynckit@^0.4.0
+54 silly packumentCache full:https://registry.npmjs.org/asynckit cache-miss
+55 silly fetch manifest combined-stream@^1.0.8
+56 silly packumentCache full:https://registry.npmjs.org/combined-stream cache-miss
+57 silly fetch manifest es-set-tostringtag@^2.1.0
+58 silly packumentCache full:https://registry.npmjs.org/es-set-tostringtag cache-miss
+59 http fetch GET 200 https://registry.npmjs.org/asynckit 228ms (cache miss)
+60 silly packumentCache full:https://registry.npmjs.org/asynckit set size:undefined disposed:false
+61 http fetch GET 200 https://registry.npmjs.org/es-set-tostringtag 231ms (cache miss)
+62 silly packumentCache full:https://registry.npmjs.org/es-set-tostringtag set size:undefined disposed:false
+63 http fetch GET 200 https://registry.npmjs.org/combined-stream 259ms (cache miss)
+64 silly packumentCache full:https://registry.npmjs.org/combined-stream set size:undefined disposed:false
+65 silly placeDep ROOT object-assign@4.1.1 OK for: cors@2.8.5 want: ^4
+66 silly placeDep ROOT asynckit@0.4.0 OK for: form-data@4.0.2 want: ^0.4.0
+67 silly placeDep ROOT combined-stream@1.0.8 OK for: form-data@4.0.2 want: ^1.0.8
+68 silly placeDep ROOT es-set-tostringtag@2.1.0 OK for: form-data@4.0.2 want: ^2.1.0
+69 silly fetch manifest delayed-stream@~1.0.0
+70 silly packumentCache full:https://registry.npmjs.org/delayed-stream cache-miss
+71 silly fetch manifest has-tostringtag@^1.0.2
+72 silly packumentCache full:https://registry.npmjs.org/has-tostringtag cache-miss
+73 http fetch GET 200 https://registry.npmjs.org/delayed-stream 1581ms (cache miss)
+74 silly packumentCache full:https://registry.npmjs.org/delayed-stream set size:undefined disposed:false
+75 http fetch GET 200 https://registry.npmjs.org/has-tostringtag 1616ms (cache miss)
+76 silly packumentCache full:https://registry.npmjs.org/has-tostringtag set size:undefined disposed:false
+77 silly placeDep ROOT delayed-stream@1.0.0 OK for: combined-stream@1.0.8 want: ~1.0.0
+78 silly placeDep ROOT has-tostringtag@1.0.2 OK for: es-set-tostringtag@2.1.0 want: ^1.0.2
+79 silly reify moves {}
+80 silly audit bulk request {
+80 silly audit   accepts: [ '1.3.8' ],
+80 silly audit   'array-flatten': [ '1.1.1' ],
+80 silly audit   bcryptjs: [ '3.0.2' ],
+80 silly audit   'body-parser': [ '1.20.3' ],
+80 silly audit   bytes: [ '3.1.2' ],
+80 silly audit   'call-bind-apply-helpers': [ '1.0.2' ],
+80 silly audit   'call-bound': [ '1.0.4' ],
+80 silly audit   'content-disposition': [ '0.5.4' ],
+80 silly audit   'content-type': [ '1.0.5' ],
+80 silly audit   cookie: [ '0.7.1' ],
+80 silly audit   'cookie-signature': [ '1.0.6' ],
+80 silly audit   debug: [ '2.6.9' ],
+80 silly audit   depd: [ '2.0.0' ],
+80 silly audit   destroy: [ '1.2.0' ],
+80 silly audit   'dunder-proto': [ '1.0.1' ],
+80 silly audit   'ee-first': [ '1.1.1' ],
+80 silly audit   encodeurl: [ '2.0.0', '1.0.2' ],
+80 silly audit   'es-define-property': [ '1.0.1' ],
+80 silly audit   'es-errors': [ '1.3.0' ],
+80 silly audit   'es-object-atoms': [ '1.1.1' ],
+80 silly audit   'escape-html': [ '1.0.3' ],
+80 silly audit   etag: [ '1.8.1' ],
+80 silly audit   finalhandler: [ '1.3.1' ],
+80 silly audit   forwarded: [ '0.2.0' ],
+80 silly audit   fresh: [ '0.5.2' ],
+80 silly audit   'function-bind': [ '1.1.2' ],
+80 silly audit   'get-intrinsic': [ '1.3.0' ],
+80 silly audit   'get-proto': [ '1.0.1' ],
+80 silly audit   gopd: [ '1.2.0' ],
+80 silly audit   'has-symbols': [ '1.1.0' ],
+80 silly audit   hasown: [ '2.0.2' ],
+80 silly audit   'http-errors': [ '2.0.0' ],
+80 silly audit   'iconv-lite': [ '0.4.24' ],
+80 silly audit   inherits: [ '2.0.4' ],
+80 silly audit   'ipaddr.js': [ '1.9.1' ],
+80 silly audit   'math-intrinsics': [ '1.1.0' ],
+80 silly audit   'media-typer': [ '0.3.0' ],
+80 silly audit   'merge-descriptors': [ '1.0.3' ],
+80 silly audit   methods: [ '1.1.2' ],
+80 silly audit   mime: [ '1.6.0' ],
+80 silly audit   'mime-db': [ '1.52.0' ],
+80 silly audit   'mime-types': [ '2.1.35' ],
+80 silly audit   ms: [ '2.0.0', '2.1.3' ],
+80 silly audit   negotiator: [ '0.6.3' ],
+80 silly audit   'object-inspect': [ '1.13.4' ],
+80 silly audit   'on-finished': [ '2.4.1' ],
+80 silly audit   parseurl: [ '1.3.3' ],
+80 silly audit   'path-to-regexp': [ '0.1.12' ],
+80 silly audit   'proxy-addr': [ '2.0.7' ],
+80 silly audit   qs: [ '6.13.0' ],
+80 silly audit   'range-parser': [ '1.2.1' ],
+80 silly audit   'raw-body': [ '2.5.2' ],
+80 silly audit   'safe-buffer': [ '5.2.1' ],
+80 silly audit   'safer-buffer': [ '2.1.2' ],
+80 silly audit   send: [ '0.19.0' ],
+80 silly audit   'serve-static': [ '1.16.2' ],
+80 silly audit   setprototypeof: [ '1.2.0' ],
+80 silly audit   'side-channel': [ '1.1.0' ],
+80 silly audit   'side-channel-list': [ '1.0.0' ],
+80 silly audit   'side-channel-map': [ '1.0.1' ],
+80 silly audit   'side-channel-weakmap': [ '1.0.2' ],
+80 silly audit   statuses: [ '2.0.1' ],
+80 silly audit   toidentifier: [ '1.0.1' ],
+80 silly audit   'type-is': [ '1.6.18' ],
+80 silly audit   unpipe: [ '1.0.0' ],
+80 silly audit   'utils-merge': [ '1.0.1' ],
+80 silly audit   vary: [ '1.1.2' ],
+80 silly audit   axios: [ '1.8.2' ],
+80 silly audit   cors: [ '2.8.5' ],
+80 silly audit   dotenv: [ '16.4.7' ],
+80 silly audit   express: [ '4.21.2' ],
+80 silly audit   'follow-redirects': [ '1.15.9' ],
+80 silly audit   'form-data': [ '4.0.2' ],
+80 silly audit   'proxy-from-env': [ '1.1.0' ],
+80 silly audit   'object-assign': [ '4.1.1' ],
+80 silly audit   asynckit: [ '0.4.0' ],
+80 silly audit   'combined-stream': [ '1.0.8' ],
+80 silly audit   'es-set-tostringtag': [ '2.1.0' ],
+80 silly audit   'delayed-stream': [ '1.0.0' ],
+80 silly audit   'has-tostringtag': [ '1.0.2' ]
+80 silly audit }
+81 http cache has-tostringtag@https://registry.npmjs.org/has-tostringtag/-/has-tostringtag-1.0.2.tgz 1ms (cache hit)
+82 http cache delayed-stream@https://registry.npmjs.org/delayed-stream/-/delayed-stream-1.0.0.tgz 0ms (cache hit)
+83 http cache es-set-tostringtag@https://registry.npmjs.org/es-set-tostringtag/-/es-set-tostringtag-2.1.0.tgz 0ms (cache hit)
+84 http cache combined-stream@https://registry.npmjs.org/combined-stream/-/combined-stream-1.0.8.tgz 0ms (cache hit)
+85 http cache asynckit@https://registry.npmjs.org/asynckit/-/asynckit-0.4.0.tgz 0ms (cache hit)
+86 http cache object-assign@https://registry.npmjs.org/object-assign/-/object-assign-4.1.1.tgz 0ms (cache hit)
+87 http cache proxy-from-env@https://registry.npmjs.org/proxy-from-env/-/proxy-from-env-1.1.0.tgz 0ms (cache hit)
+88 http cache form-data@https://registry.npmjs.org/form-data/-/form-data-4.0.2.tgz 0ms (cache hit)
+89 http cache follow-redirects@https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.15.9.tgz 0ms (cache hit)
+90 http cache dotenv@https://registry.npmjs.org/dotenv/-/dotenv-16.4.7.tgz 0ms (cache hit)
+91 http cache cors@https://registry.npmjs.org/cors/-/cors-2.8.5.tgz 0ms (cache hit)
+92 http cache axios@https://registry.npmjs.org/axios/-/axios-1.8.2.tgz 0ms (cache hit)
+93 silly tarball no local data for delayed-stream@https://registry.npmjs.org/delayed-stream/-/delayed-stream-1.0.0.tgz. Extracting by manifest.
+94 silly tarball no local data for has-tostringtag@https://registry.npmjs.org/has-tostringtag/-/has-tostringtag-1.0.2.tgz. Extracting by manifest.
+95 silly tarball no local data for es-set-tostringtag@https://registry.npmjs.org/es-set-tostringtag/-/es-set-tostringtag-2.1.0.tgz. Extracting by manifest.
+96 silly tarball no local data for combined-stream@https://registry.npmjs.org/combined-stream/-/combined-stream-1.0.8.tgz. Extracting by manifest.
+97 silly tarball no local data for asynckit@https://registry.npmjs.org/asynckit/-/asynckit-0.4.0.tgz. Extracting by manifest.
+98 silly tarball no local data for proxy-from-env@https://registry.npmjs.org/proxy-from-env/-/proxy-from-env-1.1.0.tgz. Extracting by manifest.
+99 silly tarball no local data for form-data@https://registry.npmjs.org/form-data/-/form-data-4.0.2.tgz. Extracting by manifest.
+100 silly tarball no local data for axios@https://registry.npmjs.org/axios/-/axios-1.8.2.tgz. Extracting by manifest.
+101 http fetch GET 200 https://registry.npmjs.org/delayed-stream/-/delayed-stream-1.0.0.tgz 799ms (cache miss)
+102 http fetch GET 200 https://registry.npmjs.org/es-set-tostringtag/-/es-set-tostringtag-2.1.0.tgz 1439ms (cache miss)
+103 http fetch GET 200 https://registry.npmjs.org/has-tostringtag/-/has-tostringtag-1.0.2.tgz 1447ms (cache miss)
+104 http fetch POST 200 https://registry.npmjs.org/-/npm/v1/security/advisories/bulk 1853ms
+105 silly audit report {}
+106 http fetch GET 200 https://registry.npmjs.org/combined-stream/-/combined-stream-1.0.8.tgz 3559ms (cache miss)
+107 http fetch GET 200 https://registry.npmjs.org/form-data/-/form-data-4.0.2.tgz 3684ms (cache miss)
+108 http fetch GET 200 https://registry.npmjs.org/asynckit/-/asynckit-0.4.0.tgz 3698ms (cache miss)
+109 http fetch GET 200 https://registry.npmjs.org/proxy-from-env/-/proxy-from-env-1.1.0.tgz 3761ms (cache miss)
+110 http fetch GET 200 https://registry.npmjs.org/axios/-/axios-1.8.2.tgz 4445ms (cache miss)
+111 silly ADD node_modules/has-tostringtag
+112 silly ADD node_modules/delayed-stream
+113 silly ADD node_modules/es-set-tostringtag
+114 silly ADD node_modules/combined-stream
+115 silly ADD node_modules/asynckit
+116 silly ADD node_modules/object-assign
+117 silly ADD node_modules/proxy-from-env
+118 silly ADD node_modules/form-data
+119 silly ADD node_modules/follow-redirects
+120 silly ADD node_modules/dotenv
+121 silly ADD node_modules/cors
+122 silly ADD node_modules/axios
+123 verbose cwd /data/data/com.termux/files/home
+124 verbose os Linux 4.19.157-perf-28692735-abA235FXXS9EYB1
+125 verbose node v23.8.0
+126 verbose npm  v10.9.2
+127 verbose exit 0
+128 info ok

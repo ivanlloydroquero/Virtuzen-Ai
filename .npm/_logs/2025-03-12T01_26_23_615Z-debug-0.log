@@ -1,0 +1,40 @@
+0 verbose cli /data/data/com.termux/files/usr/bin/node /data/data/com.termux/files/usr/bin/npm
+1 info using npm@10.9.2
+2 info using node@v23.8.0
+3 silly config load:file:/data/data/com.termux/files/usr/lib/node_modules/npm/npmrc
+4 silly config load:file:/storage/emulated/0/Documents/.npmrc
+5 silly config load:file:/data/data/com.termux/files/home/.npmrc
+6 silly config load:file:/data/data/com.termux/files/usr/etc/npmrc
+7 verbose title npm init
+8 verbose argv "init" "--yes"
+9 verbose logfile logs-max:10 dir:/data/data/com.termux/files/home/.npm/_logs/2025-03-12T01_26_23_615Z-
+10 verbose logfile /data/data/com.termux/files/home/.npm/_logs/2025-03-12T01_26_23_615Z-debug-0.log
+11 silly logfile start cleaning logs, removing 1 files
+12 silly logfile done cleaning log files
+13 silly package data {
+13 silly package data   name: 'virtuzen-backend',
+13 silly package data   version: '1.0.0',
+13 silly package data   main: 'server.js',
+13 silly package data   scripts: {
+13 silly package data     test: 'echo "Error: no test specified" && exit 1',
+13 silly package data     start: 'node server.js'
+13 silly package data   },
+13 silly package data   repository: {
+13 silly package data     type: 'git',
+13 silly package data     url: 'git+https://github.com/ivanlloydroquero/Virtuzen-Ai-Backend.git'
+13 silly package data   },
+13 silly package data   keywords: [],
+13 silly package data   author: '',
+13 silly package data   license: 'ISC',
+13 silly package data   bugs: {
+13 silly package data     url: 'https://github.com/ivanlloydroquero/Virtuzen-Ai-Backend/issues'
+13 silly package data   },
+13 silly package data   homepage: 'https://github.com/ivanlloydroquero/Virtuzen-Ai-Backend#readme',
+13 silly package data   description: ''
+13 silly package data }
+14 verbose cwd /storage/emulated/0/Documents/virtuzen-backend
+15 verbose os Linux 4.19.157-perf-28692735-abA235FXXS9EYB1
+16 verbose node v23.8.0
+17 verbose npm  v10.9.2
+18 verbose exit 0
+19 info ok

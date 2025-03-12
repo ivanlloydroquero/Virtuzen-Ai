@@ -16,3 +16,9 @@ git status
 git add .
 git commit -m "Update: <add login and sign up>
 
+git status
+pkg upgrade
+pkg install nodejs
+npm init -y
+npm install express dotenv cors axios
+pip install -r requirements.txt
